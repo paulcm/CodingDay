@@ -20,7 +20,7 @@ public class MainView extends View  {
       super(context);
       this.rotationState = rotationState;
       this.leaf = new Leaf(20, 40, 180, 200);
-      this.tumor = new Tumor(context);
+      this.tumor = new Tumor(context, 20);
    }
 
    // Called back to draw the view. Also called by invalidate().
@@ -66,8 +66,8 @@ public class MainView extends View  {
 	   Log.i("RotationState Z", z.toString());
 	   this.leaf.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
 	   if(tumor != null)
-		   {
-		   //TODO: tumor.collideAndCorrect(xMin, yMin, xMax, yMax);
+	   {
+		   tumor.collideAndCorrect(y,z,xMin, yMin, xMax, yMax);
 	   }
 	   //mSensor.
 	   

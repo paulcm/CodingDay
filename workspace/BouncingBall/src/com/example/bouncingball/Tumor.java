@@ -1,19 +1,15 @@
 package com.example.bouncingball;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 
-public class Tumor extends Drawable {
+public class Tumor extends AbstractDrawableEntity {
 	
 	public float tumorWidth; // tumor's radius
 	public float tumorHeight; // tumor's radius
@@ -21,10 +17,10 @@ public class Tumor extends Drawable {
 	public float tumorYCenter; // tumorRadius + 40;
 	PointF tumorCentroid;
 	public float tumorSpeedX = 6;  // tumor's speed (x,y)
-	public float tumorSpeedY = 4;
-	public RectF tumorBounds;      // Needed for Canvas.drawOval
+	public float tumorSpeedY = 4;    // Needed for Canvas.drawOval
+	private Paint paint;
 	
-	int zoomFactor = 20;
+	int zoomFactor = 1;
 	
 	Bitmap tumorBitmap;
 	
@@ -33,24 +29,32 @@ public class Tumor extends Drawable {
 	int opacity = 1;
 	
 	
-	public Tumor(Context context){
-	
-		tumorCentroid = new PointF(100,100);
+	public Tumor(Context context, int zoomFactor){
+
+		paint = new Paint();
+		paint.setColor(Color.RED);
+		paint.setStrokeWidth(1.0f);
+		this.zoomFactor = zoomFactor;
+		tumorCentroid = new PointF();	
 	}
 
 
 	@Override
 	public void draw(Canvas canvas) {
-		// TODO Auto-generated method stub
-		int  w = canvas.getWidth();
-		int h = canvas.getHeight();
+
+		if(this.bounds.isEmpty())
+		{
+			int  w = canvas.getWidth();
+			int h = canvas.getHeight();
+			
+			PointF center = new PointF(w/2, h/2);
+			bounds.set(center.x-5*zoomFactor, center.y-4*zoomFactor, center.x+5*zoomFactor, center.y+3*zoomFactor);
+		}
+
 		
-		tumorCentroid.set(w/2,h/2);
+		tumorCentroid.set(bounds.centerX(),bounds.centerY());
 
 		// middle line
-		Paint paint = new Paint();
-		paint.setColor(Color.RED);
-		paint.setStrokeWidth(1.0f);
 		
 		canvas.drawRect(tumorCentroid.x-3*zoomFactor, tumorCentroid.y-4*zoomFactor, tumorCentroid.x-2*zoomFactor, tumorCentroid.y-3*zoomFactor, paint);
 		canvas.drawRect(tumorCentroid.x+2*zoomFactor, tumorCentroid.y-4*zoomFactor, tumorCentroid.x+3*zoomFactor, tumorCentroid.y-3*zoomFactor, paint);
@@ -75,28 +79,18 @@ public class Tumor extends Drawable {
 		canvas.drawRect(tumorCentroid.x+2*zoomFactor, tumorCentroid.y+2*zoomFactor, tumorCentroid.x+3*zoomFactor, tumorCentroid.y+3*zoomFactor, paint);
 		
 		canvas.drawRect(tumorCentroid.x+4*zoomFactor, tumorCentroid.y+1*zoomFactor, tumorCentroid.x+5*zoomFactor, tumorCentroid.y+3*zoomFactor, paint);
-		
 		canvas.drawRect(tumorCentroid.x-2*zoomFactor, tumorCentroid.y+3*zoomFactor, tumorCentroid.x-1*zoomFactor, tumorCentroid.y+4*zoomFactor, paint);
 		canvas.drawRect(tumorCentroid.x+1*zoomFactor, tumorCentroid.y+3*zoomFactor, tumorCentroid.x+2*zoomFactor, tumorCentroid.y+4*zoomFactor, paint);	
+	
 	}
 
 
 	@Override
-	public int getOpacity() {
-		return PixelFormat.OPAQUE;
+	public Paint getPaint() {
+		return this.paint;
 	}
 
 
-	@Override
-	public void setAlpha(int alpha) {
-		this.alpha = alpha;
-	}
 
-
-	@Override
-	public void setColorFilter(ColorFilter cf) {
-		this.colorFilter = cf;
-		
-	}
 	
 }

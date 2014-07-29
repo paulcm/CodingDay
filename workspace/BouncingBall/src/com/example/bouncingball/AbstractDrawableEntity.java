@@ -2,23 +2,29 @@ package com.example.bouncingball;
 
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.Log;
 
 public abstract class AbstractDrawableEntity implements DrawableEntity{
 	protected RectF bounds;
 	protected Paint paint;
+	
+	public AbstractDrawableEntity(){
+		this.bounds = new RectF();
+	}
 	
 	@Override
 	public void move(float dx, float dy) {
 		this.bounds.set(this.bounds.left + dx, this.bounds.top + dy, this.bounds.right + dx, this.bounds.bottom + dy);
 	}
 
+	public RectF getBounds() {
+		return this.bounds;
+	}
+	
 	
 	@Override
 	 public void collideAndCorrect(float dx, float dy, float xMin, float yMin, float xMax, float yMax)
 	   {
 		   {
-
 			      // Detect collision and react
 			      if (dx + this.bounds.right > xMax) {
 			    	  dx = xMax - this.bounds.right;
@@ -33,5 +39,6 @@ public abstract class AbstractDrawableEntity implements DrawableEntity{
 			    
 			    this.move(dx, dy);
 	   }		   
+		  
 }
 }

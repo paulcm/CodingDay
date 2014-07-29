@@ -35,7 +35,6 @@ public class Leaf extends AbstractDrawableEntity implements DrawableEntity {
 	private void initialize(float left, float top, float right, float bottom)
 	{
 		// geometry
-		this.bounds = new RectF();
 		this.bounds.set(left, top, right, bottom);
 		// material
 		this.paint = new Paint();

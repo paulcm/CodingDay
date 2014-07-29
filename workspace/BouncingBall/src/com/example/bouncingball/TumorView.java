@@ -1,8 +1,6 @@
 package com.example.bouncingball;
 
 import android.content.Context;
-import android.media.Image;
-import android.view.View;
 import android.widget.ImageView;
 
 public class TumorView extends ImageView {
