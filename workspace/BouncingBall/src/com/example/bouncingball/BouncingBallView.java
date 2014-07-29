@@ -15,6 +15,7 @@ public class BouncingBallView extends View {
    private int yMax;
    public List<Ball> ballList;
    private Paint paint;           // The paint (e.g. style, color) used for drawing
+   private DrawableEntity leaf;
    
    // Constructor
    public BouncingBallView(Context context) {
@@ -22,6 +23,8 @@ public class BouncingBallView extends View {
       this.ballList = new ArrayList<Ball>();
      this.ballList.add(new Ball());
       paint = new Paint();
+      this.leaf = new Leaf(20, 40, 180, 200);
+    
     //  this.set
    }
 
@@ -36,6 +39,8 @@ public class BouncingBallView extends View {
 		  currentBall.setBounds();
 	      paint.setColor(currentBall.color);
 	      canvas.drawOval(currentBall.ballBounds, paint);
+	      //canvas.drawRect(leaf.getBounds(), leaf.getPaint());
+	      leaf.draw(canvas);
 		}
 	  else
 	  {
