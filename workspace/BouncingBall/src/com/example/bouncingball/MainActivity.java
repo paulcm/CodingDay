@@ -3,6 +3,7 @@ package com.example.bouncingball;
 import java.util.Random;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -13,19 +14,36 @@ import android.view.WindowManager;
   
 public class MainActivity extends Activity implements OnTouchListener {
 
+	private RotationState rotationState;
    /** Called when the activity is first created. */
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      View bouncingBallView = new BouncingBallView(this);
+       rotationState = new RotationState(this);
+      View bouncingBallView = new BouncingBallView(this, rotationState);
+
       requestWindowFeature(Window.FEATURE_NO_TITLE);
       getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
                               WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+      setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
       setContentView(bouncingBallView);
       bouncingBallView.setBackgroundColor(Color.BLACK);
       bouncingBallView.setOnTouchListener(this);
    }
+   
+   
+   /* @Override
+   protected void onResume() {
+	   if(rotationState != null)
+	   this.rotationState.start();
+   }
+   
+   @Override
+   protected void onPause() {
+	   if(rotationState != null)
+		   this.rotationState.stop();
+   }*/
+   
    
    @Override
    public boolean onTouch(View v, MotionEvent event)

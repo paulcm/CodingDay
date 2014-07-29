@@ -17,4 +17,9 @@ public interface DrawableEntity {
 	public Paint getPaint();
 	
 	public void draw(Canvas canvas);
+	
+	public void move(float x, float y);
+
+	void collideAndCorrect(float dx, float dy, float xMin, float yMin,
+			float xMax, float yMax);
 }
