@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.Window;
+import android.view.WindowManager;
   
 public class MainActivity extends Activity implements OnTouchListener {
 
@@ -16,6 +18,10 @@ public class MainActivity extends Activity implements OnTouchListener {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       View bouncingBallView = new BouncingBallView(this);
+      requestWindowFeature(Window.FEATURE_NO_TITLE);
+      getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
       setContentView(bouncingBallView);
       bouncingBallView.setBackgroundColor(Color.BLACK);
       bouncingBallView.setOnTouchListener(this);

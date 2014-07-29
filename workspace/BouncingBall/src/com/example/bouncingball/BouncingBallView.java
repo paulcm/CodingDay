@@ -1,14 +1,11 @@
 package com.example.bouncingball;
   
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.view.View;
    
 public class BouncingBallView extends View {
@@ -25,6 +22,7 @@ public class BouncingBallView extends View {
       this.ballList = new ArrayList<Ball>();
      this.ballList.add(new Ball());
       paint = new Paint();
+    //  this.set
    }
 
    // Called back to draw the view. Also called by invalidate().
@@ -54,7 +52,7 @@ public class BouncingBallView extends View {
 	  
 	      // Delay
 	      try {  
-	         Thread.sleep(20);  
+	         Thread.sleep(1);  
 	      } catch (InterruptedException e) { }
 	  
       invalidate();  // Force a re-draw

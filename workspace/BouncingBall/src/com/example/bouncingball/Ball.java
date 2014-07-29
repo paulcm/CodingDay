@@ -7,10 +7,10 @@ public class Ball {
 	public float ballRadius = 80; // Ball's radius
 	public float ballX = ballRadius + 20;  // Ball's center (x,y)
 	public float ballY = ballRadius + 40;
-	public float ballSpeedX = 5;  // Ball's speed (x,y)
-	public float ballSpeedY = 3;
+	public float ballSpeedX = 6;  // Ball's speed (x,y)
+	public float ballSpeedY = 4;
 	public RectF ballBounds;      // Needed for Canvas.drawOval
-	public int color = Color.GREEN;
+	public int color = Color.RED;
 	   
 	   public Ball()
 	   {
