@@ -5,10 +5,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
-public class Leaf implements ILeaf {
+public class Leaf extends AbstractDrawableEntity implements DrawableEntity {
 
-	private RectF bounds;
-	private Paint paint;
+
 
 
 	/**
@@ -29,7 +28,7 @@ public class Leaf implements ILeaf {
 
 	@Override
 	public Paint getPaint() {
-		return this.paint;
+		return paint;
 	}
 
 	
@@ -38,7 +37,6 @@ public class Leaf implements ILeaf {
 		// geometry
 		this.bounds = new RectF();
 		this.bounds.set(left, top, right, bottom);
-		
 		// material
 		this.paint = new Paint();
 		this.paint.setColor(Color.YELLOW);
@@ -48,4 +46,6 @@ public class Leaf implements ILeaf {
 	public void draw(Canvas canvas) {
 		  canvas.drawRect(this.getBounds(), this.getPaint());
 	}
+
+	
 }
