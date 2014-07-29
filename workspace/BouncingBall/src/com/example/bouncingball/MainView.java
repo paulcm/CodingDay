@@ -1,8 +1,13 @@
 package com.example.bouncingball;
   
+
+import java.util.Date;
+import java.util.Vector;
+
 import android.content.Context;
 import android.graphics.Canvas;
-import android.util.Log;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.View;
    
 public class MainView extends View  {
@@ -12,13 +17,19 @@ public class MainView extends View  {
    private int yMax;         
    private DrawableEntity leaf;
    private RotationState rotationState;
+
    
    private Tumor tumor;
-   
+
+   private Date startTime;
+   private Vector<Float> myStats;
+
    // Constructor
    public MainView(Context context, RotationState rotationState) {
       super(context);
+      myStats = new Vector<Float>();
       this.rotationState = rotationState;
+      this.startTime = new Date();
       this.leaf = new Leaf(20, 40, 180, 200);
       this.tumor = new Tumor(context, 20);
    }
@@ -28,12 +39,27 @@ public class MainView extends View  {
    protected void onDraw(Canvas canvas) {
       // Draw the ball
 	   //virtuos coding mode enabled!
+	  Date currentTime = new Date();
 	  
+	  if(currentTime.getTime() - startTime.getTime() >= 3000)
+	  {
+		  Paint textPaint = new Paint();
+		  textPaint.setTextSize(50);
+		  textPaint.setColor(Color.GREEN);
+		  float result = .0f;
+		  for(Float f : myStats)
+		  {
+			  result += f;
+		  }
+		  result /= myStats.size();
+		  canvas.drawText("Average Coverage: " + result + "%", 100, 100, textPaint);
+	  }
 	  if(tumor != null && leaf != null)
 		{
 	      //canvas.drawRect(leaf.getBounds(), leaf.getPaint());
 	      leaf.draw(canvas);
 	      tumor.draw(canvas);
+	      myStats.add(AbstractDrawableEntity.coverage(leaf.getBounds(), tumor.getBounds()));
 		}
 	  else
 	  {
@@ -58,12 +84,8 @@ public class MainView extends View  {
    
    // Detect collision and update the position of the ball.
    private void update() {
-	   Float x = rotationState.getRotationX();
 	   Float y = rotationState.getRotationY();
 	   Float z = rotationState.getRotationZ();
-	   Log.i("RotationState X", x.toString());
-	   Log.i("RotationState Y", y.toString());
-	   Log.i("RotationState Z", z.toString());
 	   this.leaf.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
 	   if(tumor != null)
 	   {

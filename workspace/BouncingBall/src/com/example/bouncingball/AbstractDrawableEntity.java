@@ -7,8 +7,28 @@ public abstract class AbstractDrawableEntity implements DrawableEntity{
 	protected RectF bounds;
 	protected Paint paint;
 	
+
 	public AbstractDrawableEntity(){
 		this.bounds = new RectF();
+	}
+	
+	public static float coverage(RectF beam, RectF target)
+	{
+		RectF result = new RectF();
+		if(result.setIntersect(beam, target))
+			{
+			 return computeCoverage(result, target);
+			}
+		else
+		{
+			return .0f;
+		}
+	}
+
+	private static float computeCoverage(RectF result, RectF target)
+	{
+		return (result.width() * result.height()) / ((target.width() * target.height())) * 100.0f;
+
 	}
 	
 	@Override
@@ -41,4 +61,22 @@ public abstract class AbstractDrawableEntity implements DrawableEntity{
 	   }		   
 		  
 }
+	
+	   /*@Override
+	   public boolean isNear(float x0, float y0, float nearCriteria)
+	   {
+		  // this.bounds.setIntersect(a, b)
+		   float x = this.bounds.centerX();
+		   float y = this.bounds.centerY();
+		   float distX = Math.abs(x0 - x);
+		   float distY = Math.abs(y0 - y);
+		   if(distX <= nearCriteria && distY <= nearCriteria)
+		   {
+			   return true;
+		   }
+		   else
+		   {
+			   return false;
+		   }
+	   }*/
 }
