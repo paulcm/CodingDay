@@ -17,8 +17,8 @@ public class MainView extends View  {
    private int yMax;         
    private DrawableEntity leaf;
    private RotationState rotationState;
-
-   
+ private Paint textPaint;
+ private float result;
    private Tumor tumor;
 
    private Date startTime;
@@ -32,6 +32,10 @@ public class MainView extends View  {
       this.startTime = new Date();
       this.leaf = new Leaf(20, 40, 180, 200);
       this.tumor = new Tumor(context, 20);
+      textPaint = new Paint();
+	  textPaint.setTextSize(50);
+	  textPaint.setColor(Color.GREEN);
+	  result = .0f;
    }
 
    // Called back to draw the view. Also called by invalidate().
@@ -40,20 +44,18 @@ public class MainView extends View  {
       // Draw the ball
 	   //virtuos coding mode enabled!
 	  Date currentTime = new Date();
-	  
-	  if(currentTime.getTime() - startTime.getTime() >= 3000)
+	  if(currentTime.getTime() - startTime.getTime() >= 10000)
 	  {
-		  Paint textPaint = new Paint();
-		  textPaint.setTextSize(50);
-		  textPaint.setColor(Color.GREEN);
-		  float result = .0f;
+		  result = .0f;
 		  for(Float f : myStats)
 		  {
 			  result += f;
 		  }
-		  result /= myStats.size();
-		  canvas.drawText("Average Coverage: " + result + "%", 100, 100, textPaint);
+		  result /= myStats.size();	  
+		  startTime = new Date();
+		  myStats.clear();
 	  }
+	  canvas.drawText("Average Coverage: " + result + "%", 100, 100, textPaint);
 	  if(tumor != null && leaf != null)
 		{
 	      //canvas.drawRect(leaf.getBounds(), leaf.getPaint());
