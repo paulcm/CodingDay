@@ -1,14 +1,11 @@
 package com.example.bouncingball;
   
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.view.View;
    
 public class BouncingBallView extends View {
@@ -18,6 +15,7 @@ public class BouncingBallView extends View {
    private int yMax;
    public List<Ball> ballList;
    private Paint paint;           // The paint (e.g. style, color) used for drawing
+   private DrawableEntity leaf;
    
    // Constructor
    public BouncingBallView(Context context) {
@@ -25,6 +23,9 @@ public class BouncingBallView extends View {
       this.ballList = new ArrayList<Ball>();
      this.ballList.add(new Ball());
       paint = new Paint();
+      this.leaf = new Leaf(20, 40, 180, 200);
+    
+    //  this.set
    }
 
    // Called back to draw the view. Also called by invalidate().
@@ -38,6 +39,8 @@ public class BouncingBallView extends View {
 		  currentBall.setBounds();
 	      paint.setColor(currentBall.color);
 	      canvas.drawOval(currentBall.ballBounds, paint);
+	      //canvas.drawRect(leaf.getBounds(), leaf.getPaint());
+	      leaf.draw(canvas);
 		}
 	  else
 	  {
@@ -54,7 +57,7 @@ public class BouncingBallView extends View {
 	  
 	      // Delay
 	      try {  
-	         Thread.sleep(20);  
+	         Thread.sleep(1);  
 	      } catch (InterruptedException e) { }
 	  
       invalidate();  // Force a re-draw
