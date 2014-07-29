@@ -17,18 +17,19 @@ public class MainView extends View  {
    private int yMax;         
    private DrawableEntity leaf;
    private RotationState rotationState;
- private Paint textPaint;
- private float result;
+   private Paint textPaint;
+  private double result;
    private Tumor tumor;
+   StatsGenerator<Float> statsGen;
 
    private Date startTime;
-   private Vector<Float> myStats;
+
 
    // Constructor
    public MainView(Context context, RotationState rotationState) {
       super(context);
-      myStats = new Vector<Float>();
       this.rotationState = rotationState;
+      statsGen = new StatsGenerator<Float>();
       this.startTime = new Date();
       this.leaf = new Leaf(20, 40, 180, 200);
       this.tumor = new Tumor(context, 20);
@@ -46,14 +47,10 @@ public class MainView extends View  {
 	  Date currentTime = new Date();
 	  if(currentTime.getTime() - startTime.getTime() >= 10000)
 	  {
-		  result = .0f;
-		  for(Float f : myStats)
-		  {
-			  result += f;
-		  }
-		  result /= myStats.size();	  
+		  result = statsGen.generateStats();
+		 
 		  startTime = new Date();
-		  myStats.clear();
+		  statsGen.clearStats();
 	  }
 	  canvas.drawText("Average Coverage: " + result + "%", 100, 100, textPaint);
 	  if(tumor != null && leaf != null)
@@ -61,22 +58,14 @@ public class MainView extends View  {
 	      //canvas.drawRect(leaf.getBounds(), leaf.getPaint());
 	      leaf.draw(canvas);
 	      tumor.draw(canvas);
-	      myStats.add(AbstractDrawableEntity.coverage(leaf.getBounds(), tumor.getBounds()));
+	      statsGen.addStatPoint(AbstractDrawableEntity.coverage(leaf.getBounds(), tumor.getBounds()));
 		}
 	  else
 	  {
-		 /* paint.setColor(Color.RED);
-	
-			
-			
-		  RectF ballBounds = new RectF();
-		  ballBounds.set(100-80, 120-80, 100+80, 120+80);
-		  canvas.drawOval(currentBall.ballBounds, paint);*/
 	  }
-	      // Update the position of the ball, including collision detection and reaction.
+	      // Update the position, including collision detection and reaction.
 	      update();
-	  
-	      // Delay
+	 	      // Delay
 	      try {  
 	         Thread.sleep(20);  
 	      } catch (InterruptedException e) { }
@@ -84,7 +73,7 @@ public class MainView extends View  {
       invalidate();  // Force a re-draw
    }
    
-   // Detect collision and update the position of the ball.
+   // Detect collision and update the position.
    private void update() {
 	   Float y = rotationState.getRotationY();
 	   Float z = rotationState.getRotationZ();
