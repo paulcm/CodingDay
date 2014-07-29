@@ -16,14 +16,14 @@ public class MainActivity extends Activity {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
        rotationState = new RotationState(this);
-      View bouncingBallView = new MainView(this, rotationState);
+      View mainView = new MainView(this, rotationState);
 
       requestWindowFeature(Window.FEATURE_NO_TITLE);
       getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
                               WindowManager.LayoutParams.FLAG_FULLSCREEN);
       setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-      setContentView(bouncingBallView);
-      bouncingBallView.setBackgroundColor(Color.BLACK);
+      setContentView(mainView);
+      mainView.setBackgroundColor(Color.BLACK);
    }
    
    
