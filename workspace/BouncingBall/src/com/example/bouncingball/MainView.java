@@ -1,33 +1,26 @@
 package com.example.bouncingball;
   
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.util.Log;
 import android.view.View;
    
-public class BouncingBallView extends View  {
+public class MainView extends View  {
    private int xMin = 0;          // This view's bounds
    private int xMax;
    private int yMin = 0;
-   private int yMax;
-   public List<Ball> ballList;
-   private Paint paint;           // The paint (e.g. style, color) used for drawing
+   private int yMax;         
    private DrawableEntity leaf;
    private RotationState rotationState;
    
+   private Tumor tumor;
+   
    // Constructor
-   public BouncingBallView(Context context, RotationState rotationState) {
+   public MainView(Context context, RotationState rotationState) {
       super(context);
       this.rotationState = rotationState;
-      this.ballList = new ArrayList<Ball>();
-     this.ballList.add(new Ball());
-      paint = new Paint();
       this.leaf = new Leaf(20, 40, 180, 200);
-    
+      this.tumor = new Tumor(context);
    }
 
    // Called back to draw the view. Also called by invalidate().
@@ -35,15 +28,12 @@ public class BouncingBallView extends View  {
    protected void onDraw(Canvas canvas) {
       // Draw the ball
 	   //virtuos coding mode enabled!
-	   
-	  Ball currentBall = ballList.get(0);
-	  if(currentBall != null)
+	  
+	  if(tumor != null && leaf != null)
 		{
-		  currentBall.setBounds();
-	      paint.setColor(currentBall.color);
-	      canvas.drawOval(currentBall.ballBounds, paint);
 	      //canvas.drawRect(leaf.getBounds(), leaf.getPaint());
 	      leaf.draw(canvas);
+	      tumor.draw(canvas);
 		}
 	  else
 	  {
@@ -68,7 +58,6 @@ public class BouncingBallView extends View  {
    
    // Detect collision and update the position of the ball.
    private void update() {
-	   Ball currentBall = ballList.get(0);
 	   Float x = rotationState.getRotationX();
 	   Float y = rotationState.getRotationY();
 	   Float z = rotationState.getRotationZ();
@@ -76,9 +65,9 @@ public class BouncingBallView extends View  {
 	   Log.i("RotationState Y", y.toString());
 	   Log.i("RotationState Z", z.toString());
 	   this.leaf.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
-	   if(currentBall != null)
+	   if(tumor != null)
 		   {
-		   currentBall.collideAndCorrect(xMin, yMin, xMax, yMax);
+		   //TODO: tumor.collideAndCorrect(xMin, yMin, xMax, yMax);
 	   }
 	   //mSensor.
 	   
