@@ -43,6 +43,7 @@ public class RotationState implements SensorEventListener {
 		mSensorManager.unregisterListener(this);
 	}
 
+	@Override
 	public void onSensorChanged(SensorEvent event) {
 		// we received a sensor event. it is a good practice to check
 		// that we received the proper event

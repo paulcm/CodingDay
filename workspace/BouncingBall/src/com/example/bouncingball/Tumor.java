@@ -1,13 +1,11 @@
 package com.example.bouncingball;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
-import android.graphics.Paint;
 import android.graphics.PointF;
-import android.graphics.RectF;
+import android.util.Log;
 
 public class Tumor extends AbstractDrawableEntity {
 	
@@ -18,7 +16,7 @@ public class Tumor extends AbstractDrawableEntity {
 	PointF tumorCentroid;
 	public float tumorSpeedX = 6;  // tumor's speed (x,y)
 	public float tumorSpeedY = 4;    // Needed for Canvas.drawOval
-	private Paint paint;
+
 	
 	int zoomFactor = 1;
 	
@@ -29,9 +27,9 @@ public class Tumor extends AbstractDrawableEntity {
 	int opacity = 1;
 	
 	
-	public Tumor(Context context, int zoomFactor){
-
-		paint = new Paint();
+	public Tumor(int zoomFactor){
+		super();
+		//paint = new Paint();
 		paint.setColor(Color.RED);
 		paint.setStrokeWidth(1.0f);
 		this.zoomFactor = zoomFactor;
@@ -41,7 +39,9 @@ public class Tumor extends AbstractDrawableEntity {
 
 	@Override
 	public void draw(Canvas canvas) {
-
+		Log.i("Tumor: ", "Bounds:" + "Left: " + this.getBounds().left + "Top: "
+				+ this.getBounds().top + "right: " + this.getBounds().right
+				+ "bottom: " + this.getBounds().bottom);
 		if(this.bounds.isEmpty())
 		{
 			int  w = canvas.getWidth();
@@ -51,7 +51,7 @@ public class Tumor extends AbstractDrawableEntity {
 			bounds.set(center.x-5*zoomFactor, center.y-4*zoomFactor, center.x+5*zoomFactor, center.y+3*zoomFactor);
 		}
 
-		
+		Log.i("Tumor: ", "Bounds Center:" + " x: " + this.bounds.centerX() + " y: " + this.bounds.centerY());
 		tumorCentroid.set(bounds.centerX(),bounds.centerY());
 
 		// middle line
@@ -83,14 +83,5 @@ public class Tumor extends AbstractDrawableEntity {
 		canvas.drawRect(tumorCentroid.x+1*zoomFactor, tumorCentroid.y+3*zoomFactor, tumorCentroid.x+2*zoomFactor, tumorCentroid.y+4*zoomFactor, paint);	
 	
 	}
-
-
-	@Override
-	public Paint getPaint() {
-		return this.paint;
-	}
-
-
-
 	
 }

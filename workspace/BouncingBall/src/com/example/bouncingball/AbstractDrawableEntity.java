@@ -10,6 +10,7 @@ public abstract class AbstractDrawableEntity implements DrawableEntity{
 
 	public AbstractDrawableEntity(){
 		this.bounds = new RectF();
+		this.paint = new Paint();
 	}
 	
 	public static float coverage(RectF beam, RectF target)
@@ -35,9 +36,14 @@ public abstract class AbstractDrawableEntity implements DrawableEntity{
 	public void move(float dx, float dy) {
 		this.bounds.set(this.bounds.left + dx, this.bounds.top + dy, this.bounds.right + dx, this.bounds.bottom + dy);
 	}
-
+	@Override
 	public RectF getBounds() {
 		return this.bounds;
+	}
+	
+	@Override
+	public Paint getPaint() {
+		return this.paint;
 	}
 	
 	
