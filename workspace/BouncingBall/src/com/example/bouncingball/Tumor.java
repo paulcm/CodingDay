@@ -1,10 +1,14 @@
 package com.example.bouncingball;
 
+import java.lang.System;
+import java.util.Random;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.PointF;
+//import android.provider.Settings.System;
 import android.util.Log;
 
 public class Tumor extends AbstractDrawableEntity {
@@ -16,8 +20,12 @@ public class Tumor extends AbstractDrawableEntity {
 	PointF tumorCentroid;
 	public float tumorSpeedX = 6;  // tumor's speed (x,y)
 	public float tumorSpeedY = 4;    // Needed for Canvas.drawOval
-
-	
+	private float yMovement = 1;
+	private float xMovement = 1;
+	final static int movementStepsize = 5;
+	private long performedMovements = 0;
+	private int accelerationFactor = 1;
+	Random r;
 	int zoomFactor = 1;
 	
 	Bitmap tumorBitmap;
@@ -34,8 +42,41 @@ public class Tumor extends AbstractDrawableEntity {
 		paint.setStrokeWidth(1.0f);
 		this.zoomFactor = zoomFactor;
 		tumorCentroid = new PointF();	
+		r = new Random();
+		 
+	}
+	
+	public void moveTumor(int xMin, int yMin, int xMax, int yMax)
+	{
+		
+		boolean collision[] = this.collideAndCorrect((int)xMovement, (int)yMovement, xMin, yMin, xMax, yMax);
+		
+		if (collision[0] || collision[1])
+			accelerationFactor = r.nextInt(6)+1;
+		
+		if (collision[0])
+		{					
+			if (xMovement < 0)
+				xMovement = movementStepsize;
+			else
+				xMovement = movementStepsize * (-1);
+					
+			xMovement = xMovement * (float)accelerationFactor;
+			
+		}
+		if (collision[1])
+		{	
+			if (yMovement < 0)
+				yMovement = movementStepsize;
+			else
+				yMovement = movementStepsize  * (-1);
+			
+			yMovement = yMovement * (float)accelerationFactor;
+		}
+		performedMovements++;
 	}
 
+	
 
 	@Override
 	public void draw(Canvas canvas) {
@@ -48,7 +89,7 @@ public class Tumor extends AbstractDrawableEntity {
 			int h = canvas.getHeight();
 			
 			PointF center = new PointF(w/2, h/2);
-			bounds.set(center.x-5*zoomFactor, center.y-4*zoomFactor, center.x+5*zoomFactor, center.y+3*zoomFactor);
+			bounds.set(center.x-5*zoomFactor, center.y-4*zoomFactor, center.x+5*zoomFactor, center.y+4*zoomFactor);
 		}
 
 		Log.i("Tumor: ", "Bounds Center:" + " x: " + this.bounds.centerX() + " y: " + this.bounds.centerY());

@@ -48,23 +48,31 @@ public abstract class AbstractDrawableEntity implements DrawableEntity{
 	
 	
 	@Override
-	 public void collideAndCorrect(float dx, float dy, float xMin, float yMin, float xMax, float yMax)
+	 public boolean[] collideAndCorrect(float dx, float dy, float xMin, float yMin, float xMax, float yMax)
 	   {
-		   {
+
+		boolean collision[] = new boolean[2];
+		collision[0] = false;
+		collision[1] = false;
+		
 			      // Detect collision and react
 			      if (dx + this.bounds.right > xMax) {
 			    	  dx = xMax - this.bounds.right;
+			    	  collision[0] = true;
 			      } else if (this.bounds.left + dx < xMin) {
 			    	  dx = xMin + this.bounds.left;
+			    	  collision[0] = true;
 			      }
 			    if (dy + this.bounds.top < yMin) {
 			    	  dy = yMin + this.bounds.top;
+			    	  collision[1] = true;
 			      } else if (dy + this.bounds.bottom > yMax) {
 			    	  dy = yMax - this.bounds.bottom;
+			    	  collision[1] = true;
 			      }
 			    
 			    this.move(dx, dy);
-	   }		   
+			    return collision;
 		  
 }
 	
