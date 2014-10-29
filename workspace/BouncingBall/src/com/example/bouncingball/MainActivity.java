@@ -1,6 +1,7 @@
 package com.example.bouncingball;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Window;
@@ -22,6 +23,9 @@ public class MainActivity extends Activity {
 		
      	this.mainThread = new MainLoopThread(this);
 		this.mainThread.start();
+		
+		Intent objIntent = new Intent(this, BackgroundSound.class);
+		startService(objIntent);
 	}
 
 	/*
@@ -31,6 +35,13 @@ public class MainActivity extends Activity {
 	 * @Override protected void onPause() { if(rotationState != null)
 	 * this.rotationState.stop(); }
 	 */
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Intent objIntent = new Intent(this, BackgroundSound.class);
+		stopService(objIntent);
+	}
 
 
 }

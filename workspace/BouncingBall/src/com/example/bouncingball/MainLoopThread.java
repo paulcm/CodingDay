@@ -4,8 +4,8 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
-import android.view.View;
 
 public class MainLoopThread extends Thread {
 
@@ -41,11 +41,14 @@ public class MainLoopThread extends Thread {
 		this.rotationState = new RotationState(context);
 		
 		this.startTime = new Date();
+		
+	
 	}
 
 	@Override
 	public void run() {
 	
+		
 		while(running)
 		{
 		Date currentTime = new Date();
