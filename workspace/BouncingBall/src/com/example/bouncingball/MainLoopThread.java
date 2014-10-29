@@ -12,7 +12,7 @@ public class MainLoopThread extends Thread {
 	public MainView view;
 	private StatsGenerator<Float> statsGen;
 	private Date startTime;
-	private DrawableEntity enemy;
+	private Tumor enemy;
 	private MainView mainView;
 	private DrawableEntity player;
 	private Scene scene;
@@ -89,7 +89,8 @@ public class MainLoopThread extends Thread {
 		{
 			e.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
 		}*/
-		this.enemy.collideAndCorrect(y, z, xMin, yMin, xMax, yMax);
+		this.enemy.moveTumor((int)xMin, (int)yMin, (int)xMax, (int)yMax);
+		
 		this.player.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
 	}
 

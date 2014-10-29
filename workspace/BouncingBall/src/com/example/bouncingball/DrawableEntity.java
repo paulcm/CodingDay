@@ -20,7 +20,7 @@ public interface DrawableEntity {
 	
 	public void move(float x, float y);
 
-	public void collideAndCorrect(float dx, float dy, float xMin, float yMin,
+	public boolean[] collideAndCorrect(float dx, float dy, float xMin, float yMin,
 			float xMax, float yMax);
 	
 	//public boolean isNear(float x0, float y0, float nearCriteria);
