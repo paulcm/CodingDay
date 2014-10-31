@@ -6,11 +6,12 @@ import android.graphics.Paint;
 
 public class Linac extends AbstractDrawableEntity{
 	private float myStartPointXPos;
-	private float startPointYPos;
+	private float myStartPointYPos;
 	private float endPointXPos;
 	private float endPointYPos;
 	private final float myLinacWidth = 120;
 	private final float myLinacHeight = 80;
+	private float myBeamWidth = myLinacHeight / 2.0f;
 	private Paint myBeamPaint;
 
 	/**
@@ -46,7 +47,7 @@ public class Linac extends AbstractDrawableEntity{
 		// material
 		this.paint.setColor(Color.GRAY);
 		this.myStartPointXPos = left;
-		this.startPointYPos = bottom;
+		this.myStartPointYPos = bottom;
 		this.endPointXPos = right;
 		this.endPointYPos = top;
 		this.myBeamPaint = new Paint();
@@ -55,7 +56,8 @@ public class Linac extends AbstractDrawableEntity{
 
 	@Override
 	public void draw(Canvas canvas) {
-        canvas.drawLine(myStartPointXPos + myLinacWidth, startPointYPos, endPointXPos, endPointYPos, myBeamPaint);
-		canvas.drawRect(myStartPointXPos, startPointYPos - myLinacHeight/2.0f, myStartPointXPos + myLinacWidth, startPointYPos + myLinacHeight/2.0f, this.getPaint());
+		myBeamPaint.setStrokeWidth(20);
+        canvas.drawLine(myStartPointXPos + myLinacWidth - 5, myStartPointYPos, endPointXPos, endPointYPos, myBeamPaint);
+        canvas.drawRect(myStartPointXPos, myStartPointYPos - myLinacHeight/2.0f, myStartPointXPos + myLinacWidth, myStartPointYPos + myLinacHeight/2.0f, this.getPaint());
 	}
 }

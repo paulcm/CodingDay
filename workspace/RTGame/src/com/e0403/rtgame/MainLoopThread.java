@@ -11,11 +11,10 @@ import android.view.MotionEvent;
 public class MainLoopThread extends Thread {
 
 	public MainView view;
-	private StatsGenerator<Float> statsGen;
+	//private StatsGenerator<Float> statsGen;
 	private Date startTime;
 	private Tumor enemy;
 	private MainView mainView;
-	private DrawableEntity player;
 	private DrawableEntity linac;
 	private Scene scene;
 	private RotationState rotationState;
@@ -37,14 +36,12 @@ public class MainLoopThread extends Thread {
 		ytop = yCenterPos - 30.0f;
 		ybottom = yCenterPos + 30.0f;
 		this.linac = new Linac(xleft, ytop, xright, ybottom);
-		this.player = new Leaf();
-		this.scene = new Scene();
+	    this.scene = new Scene();
 		this.scene.addEntity(linac);
-		this.scene.addEntity(player);
 		this.scene.addEntity(enemy);
 		inputController.registerLinac((Linac) linac);
 		// game logic to gather stats
-		this.statsGen = new StatsGenerator<Float>();
+		//this.statsGen = new StatsGenerator<Float>();
 		// the view the scene is drawn onto
 		this.mainView = new MainView(context, scene, inputController);
 		// connect activity and view
@@ -66,13 +63,13 @@ public class MainLoopThread extends Thread {
 		{
 		Date currentTime = new Date();
 		if (currentTime.getTime() - startTime.getTime() >= 10000) {
-			this.mainView.setResult(statsGen.generateStats());
-
+			//this.mainView.setResult(statsGen.generateStats());
+			this.mainView.setResult(Double.MIN_VALUE);
 			startTime = new Date();
-			statsGen.clearStats();
+			//statsGen.clearStats();
 		}
-		statsGen.addStatPoint(AbstractDrawableEntity.coverage(player.getBounds(),
-				enemy.getBounds()));
+		//statsGen.addStatPoint(AbstractDrawableEntity.coverage(player.getBounds(),
+		//		enemy.getBounds()));
 		// Update the position, including collision detection and reaction.
 		update(this.mainView.getxMin(),
 				this.mainView.getyMin(),
@@ -104,7 +101,7 @@ public class MainLoopThread extends Thread {
 		}*/
 		this.enemy.moveTumor((int)xMin, (int)yMin, (int)xMax, (int)yMax);
 		
-		this.player.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
+		//this.player.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
 	}
 
 }
