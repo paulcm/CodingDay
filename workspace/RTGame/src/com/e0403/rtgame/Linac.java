@@ -14,7 +14,12 @@ public class Linac extends AbstractDrawableEntity{
 	private float myBeamWidthMax = myLinacHeight / 2.0f;
 	private Paint myBeamPaint;
 	private Paint myCirclePaint;
-
+    private float myBeamWidth;
+	
+	public void setBeamWidth(float width)
+	{
+		this.myBeamWidth = width;
+	}
 	/**
 	 * @param theStartPosX
 	 *            The X coordinate
@@ -41,6 +46,7 @@ public class Linac extends AbstractDrawableEntity{
 	
 	private void initialize(float theStartPosX, float theStartPosY) {
 			// material
+		this.myBeamWidth = 20;
 		this.myCirclePaint = new Paint(); 
 		this.myStartPointXPos = theStartPosX;
 		this.myStartPointYPos = theStartPosY;
@@ -68,7 +74,7 @@ public class Linac extends AbstractDrawableEntity{
 
 	@Override
 	public void draw(Canvas canvas) {
-		myBeamPaint.setStrokeWidth(20);
+		myBeamPaint.setStrokeWidth(myBeamWidth);
 
         canvas.drawLine(myStartPointXPos + myLinacWidth - 5, myStartPointYPos, myEndPointXPos, myEndPointYPos, myBeamPaint);
         canvas.drawCircle(myStartPointXPos + myLinacWidth, myStartPointYPos, 25, myCirclePaint);
