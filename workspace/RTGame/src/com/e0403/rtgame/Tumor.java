@@ -1,6 +1,5 @@
 package com.e0403.rtgame;
 
-import java.lang.System;
 import java.util.Random;
 
 import android.graphics.Bitmap;
