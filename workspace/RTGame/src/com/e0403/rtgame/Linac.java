@@ -13,6 +13,7 @@ public class Linac extends AbstractDrawableEntity{
 	private final float myLinacHeight = 80;
 	private float myBeamWidthMax = myLinacHeight / 2.0f;
 	private Paint myBeamPaint;
+	private Paint myCirclePaint;
 
 	/**
 	 * @param theStartPosX
@@ -40,13 +41,15 @@ public class Linac extends AbstractDrawableEntity{
 	
 	private void initialize(float theStartPosX, float theStartPosY) {
 			// material
-		this.paint.setColor(Color.GRAY);
+		this.myCirclePaint = new Paint(); 
 		this.myStartPointXPos = theStartPosX;
 		this.myStartPointYPos = theStartPosY;
 		this.myEndPointXPos = theStartPosX + myLinacWidth * 2.0f;
 		this.myEndPointYPos = theStartPosY;
-		this.myBeamPaint = new Paint();
-		this.myBeamPaint.setColor(Color.YELLOW);
+		this.myBeamPaint = new Paint(); 
+		this.paint.setColor(Color.rgb(149, 165, 166)); // concrete
+		this.myBeamPaint.setColor(Color.rgb(241, 196, 15)); // Sun Flower
+		this.myCirclePaint.setColor(Color.rgb(52, 152, 219));// peter river
 	}
 	
 	private void calcEndPoint()
@@ -68,6 +71,7 @@ public class Linac extends AbstractDrawableEntity{
 		myBeamPaint.setStrokeWidth(20);
 
         canvas.drawLine(myStartPointXPos + myLinacWidth - 5, myStartPointYPos, myEndPointXPos, myEndPointYPos, myBeamPaint);
+        canvas.drawCircle(myStartPointXPos + myLinacWidth, myStartPointYPos, 25, myCirclePaint);
         canvas.drawRect(myStartPointXPos, myStartPointYPos - myLinacHeight/2.0f, myStartPointXPos + myLinacWidth, myStartPointYPos + myLinacHeight/2.0f, this.getPaint());
 	}
 }
