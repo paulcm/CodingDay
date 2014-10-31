@@ -12,7 +12,7 @@ public class MainLoopThread extends Thread {
 	public MainView view;
 	//private StatsGenerator<Float> statsGen;
 	private Date startTime;
-	private Cell enemy;
+	private Tumor enemy;
 	private MainView mainView;
 	private DrawableEntity linac;
 	private Scene scene;
@@ -26,7 +26,7 @@ public class MainLoopThread extends Thread {
 	public MainLoopThread(Context context) {
 		InputController inputController = new InputController();
 		// create the scene
-		this.enemy = new Cell(40);
+		this.enemy = new Tumor(40);
 		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 		int height = metrics.heightPixels;
 		float yCenterPos = height / 2.0f;
