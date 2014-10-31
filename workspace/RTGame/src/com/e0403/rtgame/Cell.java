@@ -6,8 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.util.Log;
-
 
 public class Cell extends AbstractDrawableEntity {
 
@@ -16,7 +14,13 @@ public class Cell extends AbstractDrawableEntity {
 	int scale;
 	boolean boundsInitialized = false;
 	
+	float fl;
+	float hl;
+	float fh;
+	
 	Cell[] neighbours = new Cell[6];
+	
+	PointF cellCenter;
 	
 	enum NeighbourPosition{
 		TOP,
@@ -27,13 +31,14 @@ public class Cell extends AbstractDrawableEntity {
 		TOP_LEFT
 	}
 	
-	public Cell(int zoomFactor){
+	public Cell(int zoomFactor, PointF cellCenter){
 		super();
 		this.scale = zoomFactor;
+		this.cellCenter = cellCenter;
 		
-		float fl = (float)(Math.sqrt(1f/3f));
-		float hl = fl / 2;
-		float fh = (float)(Math.sqrt(3f/4f)*fl);
+		fl = (float)(Math.sqrt(1f/3f));
+		hl = fl / 2;
+		fh = (float)(Math.sqrt(3f/4f)*fl);
 		
 		path = new Path();
 	
@@ -49,27 +54,31 @@ public class Cell extends AbstractDrawableEntity {
 		paint.setColor(Color.BLUE);
 		paint.setStrokeWidth(0);
 
-		this.bounds.set(-fl*scale, -fh*scale, fl*scale, fh*scale);
+		this.bounds.set(cellCenter.x - fl*scale, cellCenter.y - fh*scale, cellCenter.x + fl*scale, cellCenter.y + fh*scale);
 	}
 	
 	@Override
 	public void draw(Canvas canvas) {	
-		
-		if(! boundsInitialized)
-		{
-			int  w = canvas.getWidth();
-			int h = canvas.getHeight();
-			
-			PointF center = new PointF(w/2, h/2);
-			bounds.offset(center.x, center.y);
-			
-			boundsInitialized = true;
-		}
-		
 		canvas.save();
-		canvas.translate(this.bounds.centerX(), this.bounds.centerY());
+		canvas.translate(this.cellCenter.x, this.cellCenter.x);
 		canvas.drawPath(path, paint);
 		canvas.restore();
+	}
+	
+	public PointF getCellCenter()
+	{
+		return this.cellCenter;	
+	}
+	
+	public void setCellCenter(float x, float y)
+	{
+		float shiftx = x * fl * 2 * scale;
+		float shifty = y * fh * 2 * scale;
+		
+		PointF cco = new PointF(this.cellCenter.x + shiftx, this.cellCenter.y + shifty);
+		
+		this.bounds.offset(cco.x,cco.y);
+		this.cellCenter.set(shiftx, shifty);
 	}
 
 	boolean hasNeighbour(NeighbourPosition pos) {
@@ -88,38 +97,8 @@ public class Cell extends AbstractDrawableEntity {
 	
 	@Override
 	public void move(float dx, float dy) {
+		this.cellCenter.offset(dx,dy);
 		this.bounds.offset(dx, dy);
-		Log.i("TAG",this.bounds+"");
-	}
-	
-	public void moveCell(int xMin, int yMin, int xMax, int yMax)
-	{
-//		accelerationFactor = r.nextInt(6)+1;
-//		
-//		boolean collision[] = this.collideAndCorrect((int)xMovement, (int)yMovement, xMin, yMin, xMax, yMax);
-//		
-//		if (collision[0] || collision[1])
-//			accelerationFactor = r.nextInt(6)+1;
-//		
-//		if (collision[0])
-//		{					
-//			if (xMovement < 0)
-//				xMovement = movementStepsize;
-//			else
-//				xMovement = movementStepsize * (-1);
-//					
-//			xMovement = xMovement * (float)accelerationFactor;
-//			
-//		}
-//		if (collision[1])
-//		{	
-//			if (yMovement < 0)
-//				yMovement = movementStepsize;
-//			else
-//				yMovement = movementStepsize  * (-1);
-//			
-//			yMovement = yMovement * (float)accelerationFactor;
-//		}
-//		performedMovements++;
 	}
 }
+	
