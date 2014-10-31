@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="9"
-        android:targetSdkVersion="20" />
+        android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
@@ -31,6 +31,9 @@
        
         </activity>
         <service android:name="BackgroundSound"  android:enabled="true"></service>
+        <service android:name="StartSound"  android:enabled="true"></service>
+        <service android:name="ShootSound"  android:enabled="true"></service>
+        
     </application>
 
 </manifest>

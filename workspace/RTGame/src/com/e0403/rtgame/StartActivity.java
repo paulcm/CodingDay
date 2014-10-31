@@ -46,6 +46,8 @@ public class StartActivity extends Activity {
 	 * The instance of the {@link SystemUiHider} for this activity.
 	 */
 	private SystemUiHider mSystemUiHider;
+	
+	private Intent startSoundIntent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,9 @@ public class StartActivity extends Activity {
 
 		final View controlsView = findViewById(R.id.fullscreen_content_controls);
 		final View contentView = findViewById(R.id.fullscreen_content);
+		
+		startSoundIntent = new Intent(this, StartSound.class);
+		startService(startSoundIntent);
 
 		// Set up an instance of SystemUiHider to control the system UI for
 		// this activity.
@@ -129,6 +134,15 @@ public class StartActivity extends Activity {
 		// are available.
 		delayedHide(100);
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		startService(startSoundIntent);
+	}
+
+
+
 
 	/**
 	 * Touch listener to use for in-layout UI controls to delay hiding the
@@ -164,6 +178,7 @@ public class StartActivity extends Activity {
 	
 	public void startGame(View v)
 	{
+		stopService(startSoundIntent);
 		Intent intent = new Intent(this, MainActivity.class);
 		startActivity(intent);
 	}
