@@ -13,7 +13,7 @@ public class MainLoopThread extends Thread {
 	public MainView view;
 	//private StatsGenerator<Float> statsGen;
 	private Date startTime;
-	private Tumor enemy;
+	private Cell enemy;
 	private MainView mainView;
 	private DrawableEntity linac;
 	private Scene scene;
@@ -26,7 +26,7 @@ public class MainLoopThread extends Thread {
 	public MainLoopThread(Context context) {
 		InputController inputController = new InputController();
 		// create the scene
-		this.enemy = new Tumor(20);
+		this.enemy = new Cell(40);
 		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 		int height = metrics.heightPixels;
 		float yCenterPos = height / 2.0f;
@@ -52,8 +52,7 @@ public class MainLoopThread extends Thread {
 
 	@Override
 	public void run() {
-	
-		
+
 		while(running)
 		{
 		Date currentTime = new Date();
@@ -94,7 +93,7 @@ public class MainLoopThread extends Thread {
 		{
 			e.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
 		}*/
-		this.enemy.moveTumor((int)xMin, (int)yMin, (int)xMax, (int)yMax);
+		this.enemy.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
 		
 		//this.player.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
 	}
