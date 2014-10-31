@@ -7,26 +7,22 @@ import android.graphics.Paint;
 public class Linac extends AbstractDrawableEntity{
 	private float myStartPointXPos;
 	private float myStartPointYPos;
-	private float endPointXPos;
-	private float endPointYPos;
+	private float myEndPointXPos;
+	private float myEndPointYPos;
 	private final float myLinacWidth = 120;
 	private final float myLinacHeight = 80;
-	private float myBeamWidth = myLinacHeight / 2.0f;
+	private float myBeamWidthMax = myLinacHeight / 2.0f;
 	private Paint myBeamPaint;
 
 	/**
-	 * @param left
-	 *            The X coordinate of the left side of the rectangle
-	 * @param top
-	 *            The Y coordinate of the top of the rectangle
-	 * @param right
-	 *            The X coordinate of the right side of the rectangle
-	 * @param bottom
-	 *            The Y coordinate of the bottom of the rectangle
+	 * @param theStartPosX
+	 *            The X coordinate
+	 * @param theStartPosY
+	 *            The Y coordinate
 	 */
-	public Linac(float left, float top, float right, float bottom) {
+	public Linac(float theStartPosX, float theStartPosY) {
 		super();
-		this.initialize(left, top, right, bottom);
+		this.initialize(theStartPosX, theStartPosY);
 	}
 
 	
@@ -37,27 +33,41 @@ public class Linac extends AbstractDrawableEntity{
 	
 	public void receiveTouchNotification(float xPos, float yPos)
 	{
-		this.endPointXPos = xPos;
-		this.endPointYPos = yPos;
+		this.myEndPointXPos = xPos;
+		this.myEndPointYPos = yPos;
+		calcEndPoint();
 	}
 	
-	private void initialize(float left, float top, float right, float bottom) {
-		// geometry
-		this.bounds.set(left, top, right, bottom);
-		// material
+	private void initialize(float theStartPosX, float theStartPosY) {
+			// material
 		this.paint.setColor(Color.GRAY);
-		this.myStartPointXPos = left;
-		this.myStartPointYPos = bottom;
-		this.endPointXPos = right;
-		this.endPointYPos = top;
+		this.myStartPointXPos = theStartPosX;
+		this.myStartPointYPos = theStartPosY;
+		this.myEndPointXPos = theStartPosX + myLinacWidth * 2.0f;
+		this.myEndPointYPos = theStartPosY;
 		this.myBeamPaint = new Paint();
 		this.myBeamPaint.setColor(Color.YELLOW);
+	}
+	
+	private void calcEndPoint()
+	{
+		float yStart, xStart, yEnd, xEnd, yNewEnd, xNewEnd, m;
+		xNewEnd = 10000;
+		xStart = myStartPointXPos;
+		yStart = myStartPointYPos;
+		xEnd = myEndPointXPos;
+		yEnd = myEndPointYPos;
+		m = (yEnd - yStart) / (xEnd - xStart);
+		yNewEnd = m * (xNewEnd + xStart) - yStart;
+		myEndPointXPos = xNewEnd;
+		myEndPointYPos = yNewEnd;
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
 		myBeamPaint.setStrokeWidth(20);
-        canvas.drawLine(myStartPointXPos + myLinacWidth - 5, myStartPointYPos, endPointXPos, endPointYPos, myBeamPaint);
+
+        canvas.drawLine(myStartPointXPos + myLinacWidth - 5, myStartPointYPos, myEndPointXPos, myEndPointYPos, myBeamPaint);
         canvas.drawRect(myStartPointXPos, myStartPointYPos - myLinacHeight/2.0f, myStartPointXPos + myLinacWidth, myStartPointYPos + myLinacHeight/2.0f, this.getPaint());
 	}
 }
