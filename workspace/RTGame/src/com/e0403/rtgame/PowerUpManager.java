@@ -10,11 +10,22 @@ private Date myStartTime;
  private List<PowerUp> myPowerUps = new ArrayList<PowerUp>();
  private Scene myScene;
  
+ public List<PowerUp> getPowerUps()
+ {
+	return myPowerUps; 
+ }
+ 
+ public void removePowerUp(PowerUp thePowerUpToBeRemoved)
+ {
+	 this.myPowerUps.remove(thePowerUpToBeRemoved);
+	 this.myScene.removeEntity(thePowerUpToBeRemoved);
+ }
  
  public PowerUpManager(Scene scene)
  {
 	 this.myScene = scene;
      myStartTime = new Date();
+     spawnPowerUp();
  }
 
  private void removePowerUps()
@@ -28,9 +39,18 @@ private Date myStartTime;
  
  public void update()
  {
-
 	 Date currentTime = new Date();
-		if (currentTime.getTime() - myStartTime.getTime() >= 3500)
+	 for(PowerUp p : this.myPowerUps)
+	 {
+		 if(p.hasBeenHit())
+		 {
+			 if (currentTime.getTime() - myStartTime.getTime() >= 1000)
+			 {
+				 this.removePowerUp(p);
+			 }
+		 }
+	 }
+		if (currentTime.getTime() - myStartTime.getTime() >= 10000)
 		{
 		removePowerUps();
 		spawnPowerUp();
