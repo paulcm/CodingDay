@@ -18,7 +18,7 @@ public class BackgroundSound extends Service {
 	}
 	@Override
 	public void onCreate() {
-		mp = MediaPlayer.create(this, R.raw.cairnomount);
+		mp = MediaPlayer.create(this, R.raw.rtgamebackground);
 		mp.setVolume(1.0f, 1.0f);
 		mp.setLooping(true);
 	}
