@@ -32,6 +32,8 @@
         </activity>
         <service android:name="BackgroundSound"  android:enabled="true"></service>
         <service android:name="StartSound"  android:enabled="true"></service>
+        <service android:name="ShootSound"  android:enabled="true"></service>
+        
     </application>
 
 </manifest>
