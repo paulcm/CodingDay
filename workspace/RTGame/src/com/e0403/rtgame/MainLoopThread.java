@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
-import android.view.MotionEvent;
 
 public class MainLoopThread extends Thread {
 
@@ -97,7 +96,19 @@ public class MainLoopThread extends Thread {
 			e.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
 		}*/
 		this.enemy.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
-		
+		for(PowerUp p : this.myPowerUpManager.getPowerUps())
+		{
+			float hit = AbstractDrawableEntity.coverage(linac.getBounds(), p.getBounds());
+			if(hit > 0.0f)		
+			{
+				p.markHit();
+			}
+		}
+		float hit1 = AbstractDrawableEntity.coverage(linac.getBounds(), this.enemy.getBounds());
+		if(hit1 > .0f)
+		{
+			System.out.println("TREFFER");
+		}
 		//this.player.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
 	}
 

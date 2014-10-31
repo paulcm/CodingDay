@@ -1,10 +1,14 @@
 package com.e0403.rtgame;
 
+import java.util.Date;
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 
 public class PowerUp extends AbstractDrawableEntity{
 
+	private boolean iHaveBeenHit;
+	private Date myHitTime;
 	/**
 	 * @param left
 	 *            The X coordinate of the left side of the rectangle
@@ -21,20 +25,34 @@ public class PowerUp extends AbstractDrawableEntity{
 	}
 
 	
+	public boolean hasBeenHit()
+	{
+		return iHaveBeenHit;
+	}
+	
+	public Date getHitTime()
+	{
+		return myHitTime;
+	}
+	
 	private PowerUp()
 	{
-		
 	}
 	private void initialize(float left, float top, float right, float bottom) {
+		myHitTime = null;
+		iHaveBeenHit = false;
 		// geometry
 		this.bounds.set(left, top, right, bottom);
 		// material
 		this.paint.setColor(Color.WHITE);
 	}
 	
-	public void destroy()
+	
+	public void markHit()
 	{
-		
+		this.paint.setColor(Color.RED);
+		myHitTime = new Date();
+		iHaveBeenHit = true;
 	}
 
 	@Override
