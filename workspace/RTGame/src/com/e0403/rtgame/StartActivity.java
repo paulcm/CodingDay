@@ -10,7 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.e0403.rtgame.util.SystemUiHider;
-import com.example.bouncingball.R;
+import com.e0403.rtgame.R;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.

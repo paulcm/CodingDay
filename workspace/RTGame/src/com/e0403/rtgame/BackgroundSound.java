@@ -1,6 +1,6 @@
 package com.e0403.rtgame;
 
-import com.example.bouncingball.R;
+import com.e0403.rtgame.R;
 
 import android.app.Service;
 import android.content.Intent;
@@ -19,7 +19,7 @@ public class BackgroundSound extends Service {
 	@Override
 	public void onCreate() {
 		mp = MediaPlayer.create(this, R.raw.cairnomount);
-		//mp.setVolume(1.0f, 1.0f);
+		mp.setVolume(1.0f, 1.0f);
 		mp.setLooping(true);
 	}
 	@Override
