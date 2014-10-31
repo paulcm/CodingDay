@@ -12,6 +12,7 @@ public class Linac extends AbstractDrawableEntity{
 	private final float myLinacWidth = 120;
 	private final float myLinacHeight = 80;
 	private float myBeamWidthMax = myLinacHeight / 2.0f;
+
 	private Paint myBeamPaint;
 	private Paint myCirclePaint;
     private float myBeamWidth;
@@ -41,6 +42,20 @@ public class Linac extends AbstractDrawableEntity{
 	{
 		this.myEndPointXPos = xPos;
 		this.myEndPointYPos = yPos;
+		this.bounds.left = myStartPointXPos;
+		this.bounds.right = myEndPointXPos;
+		if(myStartPointYPos > myEndPointYPos)
+		{
+			this.bounds.bottom = myStartPointYPos;
+			this.bounds.top = myEndPointYPos;
+		}
+		else
+		{
+			this.bounds.bottom = myEndPointYPos;
+			this.bounds.top = myStartPointYPos;
+		}
+		
+				
 		calcEndPoint();
 	}
 	
