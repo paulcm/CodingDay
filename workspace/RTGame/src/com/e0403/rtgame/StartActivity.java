@@ -9,8 +9,8 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.e0403.rtgame.util.SystemUiHider;
 import com.e0403.rtgame.R;
+import com.e0403.rtgame.util.SystemUiHider;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
