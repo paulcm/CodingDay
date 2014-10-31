@@ -29,13 +29,8 @@ public class MainLoopThread extends Thread {
 		this.enemy = new Tumor(20);
 		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 		int height = metrics.heightPixels;
-		float xleft, ytop, xright, ybottom;
 		float yCenterPos = height / 2.0f;
-		xleft = .0f;
-		xright = 100.0f;
-		ytop = yCenterPos - 30.0f;
-		ybottom = yCenterPos + 30.0f;
-		this.linac = new Linac(xleft, ytop, xright, ybottom);
+		this.linac = new Linac(.0f, yCenterPos);
 	    this.scene = new Scene();
 		this.scene.addEntity(linac);
 		this.scene.addEntity(enemy);
