@@ -5,24 +5,22 @@ import java.util.Random;
 
 import com.e0403.rtgame.Cell.NeighbourPosition;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
+import android.graphics.Path;
+import android.graphics.Path.Op;
 import android.graphics.PointF;
 import android.graphics.RectF;
-//import android.provider.Settings.System;
+import android.os.Build;
 import android.util.Log;
 
-public class Tumor extends AbstractDrawableEntity {
+@TargetApi(Build.VERSION_CODES.KITKAT) public class Tumor extends AbstractDrawableEntity {
 	
-	public float tumorWidth; // tumor's radius
-	public float tumorHeight; // tumor's radius
-	public float tumorXCenter; // tumor's center (x,y)
-	public float tumorYCenter; // tumorRadius + 40;
 	PointF tumorCentroid;
-	public float tumorSpeedX = 6;  // tumor's speed (x,y)
-	public float tumorSpeedY = 4;    // Needed for Canvas.drawOval
 	private float yMovement = 1;
 	private float xMovement = 1;
 	final static int movementStepsize = 5;
@@ -30,30 +28,31 @@ public class Tumor extends AbstractDrawableEntity {
 	private int accelerationFactor = 1;
 	Random r;
 	int zoomFactor = 1;
+	int speed = 1;
+	Cell cell;
 	
-	Bitmap tumorBitmap;
+	double moveIterator = 0;
 	
-	ColorFilter colorFilter;
-	int alpha = 255;
-	int opacity = 1;
+	private float lastYPos = 0;
+	private float heightFactor = 1;
+	
 	
 	ArrayList<Cell> cellList;
 	
 	
-	public Tumor(int zoomFactor){
+	public Tumor(int zoomFactor, int speed){
 		super();
 		//paint = new Paint();
 		paint.setColor(Color.RED);
 		paint.setStrokeWidth(1.0f);
 		this.zoomFactor = zoomFactor;
+		this.speed = speed;
 		tumorCentroid = new PointF();	
 		r = new Random();
 		
 		cellList = new ArrayList<Cell>();
 		
 		this.composeTumor();
-		RectF tb = this.getTumorBounds();
-		int i=0;
 	}
 	
 	
@@ -71,91 +70,74 @@ public class Tumor extends AbstractDrawableEntity {
 	
 	public void composeTumor()
 	{
-		for(int i=0; i < 5; ++i){
-			
-			PointF cellCenter = new PointF(0, 0);
-			
-			Cell c = new Cell(zoomFactor,cellCenter);
-			cellList.add(c);
+		cellList.clear();
 		
-			if(i > 0) {
-				NeighbourPosition p;
-				switch(i){
-				case 1: p = NeighbourPosition.TOP_RIGHT;
-						c.setCellCenter(1, -1);
-				break;
-				case 2: p = NeighbourPosition.BOTTOM_RIGHT;
-						c.setCellCenter(1, 1);
-				break;
-				case 3: p = NeighbourPosition.BOTTOM_LEFT;
-						c.setCellCenter(-1, 1);
-				break;
-				case 4: p = NeighbourPosition.TOP_LEFT;
-						c.setCellCenter(-1, -1);
-				break;
-				default: p = NeighbourPosition.TOP;
-						c.setCellCenter(0, 1);
-				}
-				cellList.get(0).addNeighbour(c, p);
+		Cell middleCell = new Cell(zoomFactor, new PointF(0,0));
+		Cell topRight = new Cell(zoomFactor, middleCell.getNeighbourCellCenter(NeighbourPosition.TOP_RIGHT));
+		Cell bottomRight = new Cell(zoomFactor, middleCell.getNeighbourCellCenter(NeighbourPosition.BOTTOM_RIGHT));
+		Cell bottomLeft = new Cell(zoomFactor, middleCell.getNeighbourCellCenter(NeighbourPosition.BOTTOM_LEFT));
+		Cell topLeft = new Cell(zoomFactor, middleCell.getNeighbourCellCenter(NeighbourPosition.TOP_LEFT));
+		Cell top = new Cell(zoomFactor, middleCell.getNeighbourCellCenter(NeighbourPosition.TOP));
+		Cell bottom = new Cell(zoomFactor, middleCell.getNeighbourCellCenter(NeighbourPosition.BOTTOM));
+		
+		cellList.add(middleCell);
+		cellList.add(topRight);
+		cellList.add(bottomRight);
+		cellList.add(bottomLeft);
+		cellList.add(topLeft);
+		cellList.add(top);
+		cellList.add(bottom);
+		
+	}
+	
+	@SuppressLint("NewApi") public void moveTumor(float xMin, float yMin, float xMax, float yMax)
+	{	
+		if(xMin != xMax && yMin != yMax){
+			
+			float ySpan = yMax-yMin;
+			
+			Path p = new Path();
+			float relYPos =  (float)Math.sin(moveIterator*speed);
+		
+			if(Math.abs(moveIterator % (2 * Math.PI)) <= 0.1)
+			{				
+   			  heightFactor = (float)(1.0 - (float)(r.nextInt(9))/ 10);
 			}
-		}
-	}
-	
-	public void moveTumor(int xMin, int yMin, int xMax, int yMax)
-	{
-		
-		boolean collision[] = this.collideAndCorrect((int)xMovement, (int)yMovement, xMin, yMin, xMax, yMax);
-		
-		if (collision[0] || collision[1])
-			accelerationFactor = r.nextInt(6)+1;
-		
-		if (collision[0])
-		{					
-			if (xMovement < 0)
-				xMovement = movementStepsize;
-			else
-				xMovement = movementStepsize * (-1);
-					
-			xMovement = xMovement * (float)accelerationFactor;
 			
-		}
-		if (collision[1])
-		{	
-			if (yMovement < 0)
-				yMovement = movementStepsize;
-			else
-				yMovement = movementStepsize  * (-1);
+			float absYPos =  heightFactor * (ySpan / 2) * relYPos;
 			
-			yMovement = yMovement * (float)accelerationFactor;
+			for(Cell c : cellList){
+				c.setCellCenter(c.cellCenter.x, c.cellCenter.y + (float)absYPos - lastYPos);
+			}
+			lastYPos = (float)absYPos;
+			moveIterator += 2 * Math.PI / (MainLoopThread.INTERVAL * 10);
+			moveIterator = moveIterator % (2 * Math.PI);
+			Log.i("moveIterator: ", ""+moveIterator);
 		}
-		performedMovements++;
+
 	}
 
 	
 
+
+	
 	@Override
 	public void draw(Canvas canvas) {
 		
-		Log.i("Tumor: ", "Bounds:" + "Left: " + this.getBounds().left + "Top: "
-				+ this.getBounds().top + "right: " + this.getBounds().right
-				+ "bottom: " + this.getBounds().bottom);
-	
-		if(this.bounds.isEmpty())
-		{
-			int  w = canvas.getWidth();
-			int h = canvas.getHeight();
-			
-			PointF center = new PointF(w/2, h/2);
-			RectF r = this.getTumorBounds();
-			
-			bounds.set(center.x+r.left, center.y+r.top, center.x+r.right, center.y+r.bottom);// center.x+5*zoomFactor, center.y+4*zoomFactor);
-		}
-		
-		canvas.save();
-		canvas.translate(this.bounds.centerX(), this.bounds.centerY());
-		for(Cell c : cellList){
-			c.draw(canvas);
-		}
-		canvas.restore();
+			if(this.bounds.isEmpty())
+			{
+				int  w = canvas.getWidth();
+				int h = canvas.getHeight();
+				PointF center = new PointF(w/2, h/2);
+				
+				for(Cell c : cellList){
+					c.setCellCenter(center.x + c.cellCenter.x, center.y + c.cellCenter.y);
+				}
+				
+				this.bounds.set(this.getTumorBounds());
+			}
+			for(Cell c : cellList){
+				c.draw(canvas);
+			}
 	}
 }
