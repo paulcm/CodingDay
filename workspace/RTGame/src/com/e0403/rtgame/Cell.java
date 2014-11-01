@@ -1,11 +1,14 @@
 package com.e0403.rtgame;
 
 
+import android.annotation.TargetApi;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Path.Op;
 import android.graphics.PointF;
+import android.os.Build;
 
 public class Cell extends AbstractDrawableEntity {
 
@@ -22,6 +25,9 @@ public class Cell extends AbstractDrawableEntity {
 	Cell[] neighbours = new Cell[6];
 	
 	PointF cellCenter;
+	
+	// Cell dies after 10 seconds of irradiation
+	int health = 1000 / MainLoopThread.INTERVAL * 10;
 	
 	enum NeighbourPosition{
 		TOP,
@@ -61,6 +67,7 @@ public class Cell extends AbstractDrawableEntity {
 		float boundRight = points[1].x;
 		float boundBottom = points[2].y;
 		
+		
 		this.bounds.set(boundLeft,boundTop,boundRight,boundBottom);
 		
 		paint = new Paint();
@@ -69,9 +76,8 @@ public class Cell extends AbstractDrawableEntity {
 		
 	}
 	
-	@Override
-	public void draw(Canvas canvas) {	
-		
+	
+	public void updatePath() {
 		path.reset();
 		path.moveTo(points[0].x+cellCenter.x, points[0].y+cellCenter.y);	
 		path.lineTo(points[1].x+cellCenter.x, points[1].y+cellCenter.y);	
@@ -80,7 +86,11 @@ public class Cell extends AbstractDrawableEntity {
 		path.lineTo(points[4].x+cellCenter.x, points[4].y+cellCenter.y);
 		path.lineTo(points[5].x+cellCenter.x, points[5].y+cellCenter.y);	
 		path.lineTo(points[0].x+cellCenter.x, points[0].y+cellCenter.y);	
-		
+	}
+	
+	@Override
+	public void draw(Canvas canvas) {	
+		updatePath();		
 		canvas.drawPath(path, paint);
 	}
 	
@@ -95,6 +105,7 @@ public class Cell extends AbstractDrawableEntity {
 		
 		this.bounds.offset(cco.x,cco.y);
 		this.cellCenter.set(x, y);
+		updatePath();
 	}
 	
 	public PointF getNeighbourCellCenter(NeighbourPosition pos) {
@@ -124,6 +135,18 @@ public class Cell extends AbstractDrawableEntity {
 		return retVal;
 	}
 	
+	@TargetApi(Build.VERSION_CODES.KITKAT) 
+	public boolean irradiate(Path beam){
+		boolean isIrradiated = path.op(beam, Op.INTERSECT);
+		
+		if(isIrradiated){
+			--health;
+			if(health <= 0)
+				paint.setColor(Color.BLACK);
+		}
+		
+		return isIrradiated;
+	}
 
 	boolean hasNeighbour(NeighbourPosition pos) {
 		return neighbours[pos.ordinal()] != null;		
