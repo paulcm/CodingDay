@@ -18,6 +18,7 @@ public class MainLoopThread extends Thread {
 	private DrawableEntity linac;
 	private Scene scene;
 	private RotationState rotationState;
+	private PowerUpManager myPowerUpManager;
 
 	
 	private boolean running = true;
@@ -34,12 +35,13 @@ public class MainLoopThread extends Thread {
 		float yCenterPos = height / 2.0f;
 		this.linac = new Linac(.0f, yCenterPos);
 	    this.scene = new Scene();
-		this.scene.addEntity(linac);
+			this.scene.addEntity(linac);
 		this.scene.addEntity(enemy);
 		inputController.registerLinac((Linac) linac);
 		// game logic to gather stats
 		//this.statsGen = new StatsGenerator<Float>();
 		// the view the scene is drawn onto
+		myPowerUpManager = new PowerUpManager(scene);
 		this.mainView = new MainView(context, scene, inputController);
 		// connect activity and view
 		((Activity)context).setContentView(mainView);
@@ -48,13 +50,13 @@ public class MainLoopThread extends Thread {
 		// used as input to control the player entity
 		this.rotationState = new RotationState(context);
 		
-		this.startTime = new Date();	
 	}
 
 
 	@Override
 	public void run() {
-
+		this.startTime = new Date();	
+	
 		while(running)
 		{
 		Date currentTime = new Date();
@@ -67,6 +69,7 @@ public class MainLoopThread extends Thread {
 		//statsGen.addStatPoint(AbstractDrawableEntity.coverage(player.getBounds(),
 		//		enemy.getBounds()));
 		// Update the position, including collision detection and reaction.
+		myPowerUpManager.update();
 		update(this.mainView.getxMin(),
 				this.mainView.getyMin(),
 				this.mainView.getxMax(),
@@ -98,6 +101,20 @@ public class MainLoopThread extends Thread {
 		
 		this.enemy.moveTumor(xMin, yMin, xMax, yMax);
 		
+		for(PowerUp p : this.myPowerUpManager.getPowerUps())
+		{
+			float hit = AbstractDrawableEntity.coverage(linac.getBounds(), p.getBounds());
+			if(hit > 0.0f)		
+			{
+				p.markHit();
+			}
+		}
+		float hit1 = AbstractDrawableEntity.coverage(linac.getBounds(), this.enemy.getBounds());
+		if(hit1 > .0f)
+		{
+			System.out.println("TREFFER");
+		}
+
 		//this.player.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
 	}
 
