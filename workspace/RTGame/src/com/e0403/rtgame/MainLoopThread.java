@@ -5,6 +5,7 @@ import java.util.Date;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.util.DisplayMetrics;
 
 public class MainLoopThread extends Thread {
@@ -21,12 +22,14 @@ public class MainLoopThread extends Thread {
 
 	
 	private boolean running = true;
+	
+	public static final int INTERVAL = 20;
 	 
 	 
 	public MainLoopThread(Context context) {
 		InputController inputController = new InputController();
 		// create the scene
-		this.enemy = new Tumor(40);
+		this.enemy = new Tumor(20,4);
 		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 		int height = metrics.heightPixels;
 		float yCenterPos = height / 2.0f;
@@ -73,7 +76,7 @@ public class MainLoopThread extends Thread {
 				this.mainView.getyMax());
 		// Delay
 			try {
-				Thread.sleep(20);
+				Thread.sleep(INTERVAL);
 			} catch (InterruptedException e) {
 			}
 		}
@@ -95,7 +98,9 @@ public class MainLoopThread extends Thread {
 		{
 			e.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
 		}*/
-		this.enemy.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
+		
+		this.enemy.moveTumor(xMin, yMin, xMax, yMax);
+		
 		for(PowerUp p : this.myPowerUpManager.getPowerUps())
 		{
 			float hit = AbstractDrawableEntity.coverage(linac.getBounds(), p.getBounds());
@@ -109,6 +114,7 @@ public class MainLoopThread extends Thread {
 		{
 			System.out.println("TREFFER");
 		}
+
 		//this.player.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
 	}
 
