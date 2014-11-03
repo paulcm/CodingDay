@@ -4,6 +4,7 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
 
@@ -18,12 +19,14 @@ public class MainLoopThread extends Thread {
 	private Scene scene;
 	private RotationState rotationState;
 	private PowerUpManager myPowerUpManager;
+	private Context context;
 
 	
 	private boolean running = true;
 	 
 	 
 	public MainLoopThread(Context context) {
+		this.context = context;
 		InputController inputController = new InputController();
 		// create the scene
 		this.enemy = new Cell(40);
@@ -101,6 +104,8 @@ public class MainLoopThread extends Thread {
 			float hit = AbstractDrawableEntity.coverage(linac.getBounds(), p.getBounds());
 			if(hit > 0.0f)		
 			{
+				Intent objIntent = new Intent(context, BeamPowerUpSound.class);
+				context.startService(objIntent);
 				p.markHit();
 			}
 		}

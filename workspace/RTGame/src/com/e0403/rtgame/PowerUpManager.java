@@ -44,7 +44,7 @@ private Date myStartTime;
 	 {
 		 if(p.hasBeenHit())
 		 {
-			 if (currentTime.getTime() - myStartTime.getTime() >= 1000)
+			 if (currentTime.getTime() - myStartTime.getTime() >= 2000)
 			 {
 				 this.removePowerUp(p);
 			 }
@@ -63,7 +63,7 @@ private Date myStartTime;
  private void spawnPowerUp()
  {
 	 Random rand = new Random();
-	 int powerUpCount = rand.nextInt(5) + 1;
+	 int powerUpCount = rand.nextInt(1) + 1;
 	 for(int i = 0; i < powerUpCount; ++i)
 	 {
 		 float left, right, top, bottom;
