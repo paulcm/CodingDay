@@ -1,127 +1,132 @@
 package com.e0403.rtgame;
 
+import java.util.ArrayList;
 import java.util.Random;
 
-import android.graphics.Bitmap;
+import android.annotation.TargetApi;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
+import android.graphics.Path;
 import android.graphics.PointF;
-//import android.provider.Settings.System;
-import android.util.Log;
+import android.graphics.RectF;
+import android.os.Build;
 
-public class Tumor extends AbstractDrawableEntity {
+import com.e0403.rtgame.Cell.NeighbourPosition;
+
+@TargetApi(Build.VERSION_CODES.KITKAT) public class Tumor extends AbstractDrawableEntity {
 	
-	public float tumorWidth; // tumor's radius
-	public float tumorHeight; // tumor's radius
-	public float tumorXCenter; // tumor's center (x,y)
-	public float tumorYCenter; // tumorRadius + 40;
 	PointF tumorCentroid;
-	public float tumorSpeedX = 6;  // tumor's speed (x,y)
-	public float tumorSpeedY = 4;    // Needed for Canvas.drawOval
-	private float yMovement = 1;
-	private float xMovement = 1;
 	final static int movementStepsize = 5;
-	private long performedMovements = 0;
-	private int accelerationFactor = 1;
+
 	Random r;
 	int zoomFactor = 1;
+	int speed = 1;
+	Cell cell;
 	
-	Bitmap tumorBitmap;
+	double moveIterator = 0;
+	private float lastYPos = 0;
+	private float heightFactor = 1;
 	
-	ColorFilter colorFilter;
-	int alpha = 255;
-	int opacity = 1;
+	ArrayList<Cell> cellList;
 	
 	
-	public Tumor(int zoomFactor){
+	public Tumor(int zoomFactor, int speed){
 		super();
-		//paint = new Paint();
-		paint.setColor(Color.RED);
-		paint.setStrokeWidth(1.0f);
+
 		this.zoomFactor = zoomFactor;
+		this.speed = speed;
 		tumorCentroid = new PointF();	
 		r = new Random();
-		 
+		
+		cellList = new ArrayList<Cell>();
+		
+		this.composeTumor();
 	}
 	
-	public void moveTumor(int xMin, int yMin, int xMax, int yMax)
+	public boolean irradiate(Path beam){
+		
+		boolean irradiated = false;
+		for(Cell c : cellList) {
+			if(c.irradiate(beam))
+				irradiated = true;
+		}
+		return irradiated;
+	}
+	
+	public RectF getTumorBounds(){
+		
+		RectF cellUnion = new RectF();
+		
+		for(Cell c : cellList){
+			cellUnion.union(c.getBounds());
+		}
+		
+		return cellUnion;
+	}
+	
+	
+	public void composeTumor()
 	{
+		cellList.clear();
 		
-		boolean collision[] = this.collideAndCorrect((int)xMovement, (int)yMovement, xMin, yMin, xMax, yMax);
+		Cell middleCell = new Cell(zoomFactor, new PointF(0,0));
+		Cell topRight = new Cell(zoomFactor, middleCell.getNeighbourCellCenter(NeighbourPosition.TOP_RIGHT));
+		Cell bottomRight = new Cell(zoomFactor, middleCell.getNeighbourCellCenter(NeighbourPosition.BOTTOM_RIGHT));
+		Cell bottomLeft = new Cell(zoomFactor, middleCell.getNeighbourCellCenter(NeighbourPosition.BOTTOM_LEFT));
+		Cell topLeft = new Cell(zoomFactor, middleCell.getNeighbourCellCenter(NeighbourPosition.TOP_LEFT));
+		Cell top = new Cell(zoomFactor, middleCell.getNeighbourCellCenter(NeighbourPosition.TOP));
+		Cell bottom = new Cell(zoomFactor, middleCell.getNeighbourCellCenter(NeighbourPosition.BOTTOM));
 		
-		if (collision[0] || collision[1])
-			accelerationFactor = r.nextInt(6)+1;
+		cellList.add(middleCell);
+		cellList.add(topRight);
+		cellList.add(bottomRight);
+		cellList.add(bottomLeft);
+		cellList.add(topLeft);
+		cellList.add(top);
+		cellList.add(bottom);
 		
-		if (collision[0])
-		{					
-			if (xMovement < 0)
-				xMovement = movementStepsize;
-			else
-				xMovement = movementStepsize * (-1);
-					
-			xMovement = xMovement * (float)accelerationFactor;
-			
-		}
-		if (collision[1])
-		{	
-			if (yMovement < 0)
-				yMovement = movementStepsize;
-			else
-				yMovement = movementStepsize  * (-1);
-			
-			yMovement = yMovement * (float)accelerationFactor;
-		}
-		performedMovements++;
 	}
-
 	
-
+	public void moveTumor(float xMin, float yMin, float xMax, float yMax)
+	{	
+		if(xMin != xMax && yMin != yMax){
+			
+			float ySpan = yMax-yMin;
+			
+			float relYPos =  (float)Math.sin(moveIterator*speed);
+		
+			if(Math.abs(moveIterator % (2 * Math.PI)) <= 0.1)
+			{				
+   			  heightFactor = (float)(1.0 - (float)(r.nextInt(9))/ 10);
+			}
+			
+			float absYPos =  heightFactor * (ySpan / 2) * relYPos;
+			
+			for(Cell c : cellList){
+				c.setCellCenter(c.cellCenter.x, c.cellCenter.y + (float)absYPos - lastYPos);
+			}
+			lastYPos = (float)absYPos;
+			// set amount of sine curves (param speed) is processed in 10 seconds
+			moveIterator += 2 * Math.PI / (1000 / MainLoopThread.INTERVAL * 10);
+			moveIterator = moveIterator % (2 * Math.PI);
+		}
+	}
+	
 	@Override
 	public void draw(Canvas canvas) {
-		Log.i("Tumor: ", "Bounds:" + "Left: " + this.getBounds().left + "Top: "
-				+ this.getBounds().top + "right: " + this.getBounds().right
-				+ "bottom: " + this.getBounds().bottom);
-		if(this.bounds.isEmpty())
-		{
-			int  w = canvas.getWidth();
-			int h = canvas.getHeight();
-			
-			PointF center = new PointF(w/2, h/2);
-			bounds.set(center.x-5*zoomFactor, center.y-4*zoomFactor, center.x+5*zoomFactor, center.y+4*zoomFactor);
-		}
-
-		Log.i("Tumor: ", "Bounds Center:" + " x: " + this.bounds.centerX() + " y: " + this.bounds.centerY());
-		tumorCentroid.set(bounds.centerX(),bounds.centerY());
-
-		// middle line
 		
-		canvas.drawRect(tumorCentroid.x-3*zoomFactor, tumorCentroid.y-4*zoomFactor, tumorCentroid.x-2*zoomFactor, tumorCentroid.y-3*zoomFactor, paint);
-		canvas.drawRect(tumorCentroid.x+2*zoomFactor, tumorCentroid.y-4*zoomFactor, tumorCentroid.x+3*zoomFactor, tumorCentroid.y-3*zoomFactor, paint);
-		
-		canvas.drawRect(tumorCentroid.x-2*zoomFactor, tumorCentroid.y-3*zoomFactor, tumorCentroid.x-1*zoomFactor, tumorCentroid.y-2*zoomFactor, paint);
-		canvas.drawRect(tumorCentroid.x+1*zoomFactor, tumorCentroid.y-3*zoomFactor, tumorCentroid.x+2*zoomFactor, tumorCentroid.y-2*zoomFactor, paint);
-		
-		canvas.drawRect(tumorCentroid.x-3*zoomFactor, tumorCentroid.y-2*zoomFactor, tumorCentroid.x+3*zoomFactor, tumorCentroid.y-1*zoomFactor, paint);
-		//left eye
-		canvas.drawRect(tumorCentroid.x-4*zoomFactor, tumorCentroid.y-1*zoomFactor, tumorCentroid.x-3*zoomFactor, tumorCentroid.y-0*zoomFactor, paint);
-		//middle
-		canvas.drawRect(tumorCentroid.x-1*zoomFactor, tumorCentroid.y-1*zoomFactor, tumorCentroid.x+1*zoomFactor, tumorCentroid.y-0*zoomFactor, paint);
-		//right eye
-		canvas.drawRect(tumorCentroid.x+3*zoomFactor, tumorCentroid.y-1*zoomFactor, tumorCentroid.x+4*zoomFactor, tumorCentroid.y-0*zoomFactor, paint);
-		// center line		
-		canvas.drawRect(tumorCentroid.x-5*zoomFactor, tumorCentroid.y, tumorCentroid.x+5*zoomFactor, tumorCentroid.y+1*zoomFactor, paint);
-		canvas.drawRect(tumorCentroid.x-3*zoomFactor, tumorCentroid.y+1*zoomFactor, tumorCentroid.x+3*zoomFactor, tumorCentroid.y+2*zoomFactor, paint);
-		
-		canvas.drawRect(tumorCentroid.x-5*zoomFactor, tumorCentroid.y+1*zoomFactor, tumorCentroid.x-4*zoomFactor, tumorCentroid.y+3*zoomFactor, paint);
-		
-		canvas.drawRect(tumorCentroid.x-3*zoomFactor, tumorCentroid.y+2*zoomFactor, tumorCentroid.x-2*zoomFactor, tumorCentroid.y+3*zoomFactor, paint);
-		canvas.drawRect(tumorCentroid.x+2*zoomFactor, tumorCentroid.y+2*zoomFactor, tumorCentroid.x+3*zoomFactor, tumorCentroid.y+3*zoomFactor, paint);
-		
-		canvas.drawRect(tumorCentroid.x+4*zoomFactor, tumorCentroid.y+1*zoomFactor, tumorCentroid.x+5*zoomFactor, tumorCentroid.y+3*zoomFactor, paint);
-		canvas.drawRect(tumorCentroid.x-2*zoomFactor, tumorCentroid.y+3*zoomFactor, tumorCentroid.x-1*zoomFactor, tumorCentroid.y+4*zoomFactor, paint);
-		canvas.drawRect(tumorCentroid.x+1*zoomFactor, tumorCentroid.y+3*zoomFactor, tumorCentroid.x+2*zoomFactor, tumorCentroid.y+4*zoomFactor, paint);	
-	
+			if(this.bounds.isEmpty())
+			{
+				int w = canvas.getWidth();
+				int h = canvas.getHeight();
+				PointF center = new PointF(w/2, h/2);
+				
+				for(Cell c : cellList){
+					c.setCellCenter(center.x + c.cellCenter.x, center.y + c.cellCenter.y);
+				}
+				this.bounds.set(this.getTumorBounds());
+			}
+			for(Cell c : cellList){
+				c.draw(canvas);
+			}
 	}
-	
 }
