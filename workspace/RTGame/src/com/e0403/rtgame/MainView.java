@@ -30,7 +30,9 @@ public class MainView extends View {
 	private Scene scene;
 	private RotationState rotationState;
 	private PowerUpManager myPowerUpManager;
+	private OARManager myOARManager;
 	public static final int INTERVAL = 20;
+	public int hitcounter = 0;
 	
 	public Timer timer = new Timer();
 	// Constructor
@@ -51,6 +53,8 @@ public class MainView extends View {
 		//this.statsGen = new StatsGenerator<Float>();
 		// the view the scene is drawn onto
 		myPowerUpManager = new PowerUpManager(scene);
+		//NEW
+		myOARManager = new OARManager(scene);
 		// connect activity and view
 		this.setBackgroundColor(Color.BLACK);
 		
@@ -94,6 +98,7 @@ public class MainView extends View {
 		//		enemy.getBounds()));
 		// Update the position, including collision detection and reaction.
 		myPowerUpManager.update();
+		myOARManager.update();
 		this.scene.updateScene();
 		update(this.getxMin(),
 				this.getyMin(),
@@ -184,6 +189,25 @@ public class MainView extends View {
 					timer.schedule(new Task(lin), 5000);
 				}
 			}
+			
+			for(Oar o : this.myOARManager.getOar())
+			{
+				float hit2 = AbstractDrawableEntity.coverage(linac.getBounds(), o.getBounds());
+				if(hit2 > 0.0f)		
+				{
+					o.markHit();	
+					
+					hitcounter = hitcounter+1;
+					if (hitcounter == 5)
+					{
+						// ende aufrufen
+						
+					}
+					
+					
+				}
+			}
+			
 			float hit1 = AbstractDrawableEntity.coverage(linac.getBounds(), this.enemy.getBounds());
 			if(hit1 > .0f)
 			{
