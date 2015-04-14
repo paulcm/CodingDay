@@ -41,9 +41,9 @@ private Date myStartTime;
 	 while(it.hasNext())
 	 {
 		 PowerUp p = it.next();
-		 if(p.hasBeenHit())
+		 if(p.hasBeenHit())// && p.getHitTime().getTime() - currentTime.getTime() >= 500)
 		 {
-			//this.myScene.removeEntity(p);
+			this.myScene.removeEntity(p);
 			it.remove();
 		 }
 	 }
