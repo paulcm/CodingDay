@@ -1,6 +1,7 @@
 package com.e0403.rtgame;
 
 import java.util.Date;
+import java.util.Timer;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,7 +27,8 @@ public class MainLoopThread extends Thread {
 	private boolean running = true;
 	
 	public static final int INTERVAL = 20;
-	 
+	
+	 Timer timer = new Timer();
 	 
 	public MainLoopThread(Context context) {
 		this.context = context;
@@ -53,9 +55,11 @@ public class MainLoopThread extends Thread {
 		// used as input to control the player entity
 		this.rotationState = new RotationState(context);
 		
+		
 	}
 
-
+	
+	
 	@Override
 	public void run() {
 		this.startTime = new Date();	
@@ -109,11 +113,20 @@ public class MainLoopThread extends Thread {
 			float hit = AbstractDrawableEntity.coverage(linac.getBounds(), p.getBounds());
 			if(hit > 0.0f)		
 			{
+				
+				timer.cancel();
 				Intent objIntent = new Intent(context, BeamPowerUpSound.class);
 				context.startService(objIntent);
 				p.markHit();
 				Linac lin = (Linac) linac;
 				lin.setBeamWidth(40);
+				
+				//start in 5sec
+				Timer timer = new Timer();
+				timer.schedule(new Task(lin), 5000 );
+				
+				
+				
 			}
 		}
 		float hit1 = AbstractDrawableEntity.coverage(linac.getBounds(), this.enemy.getBounds());
