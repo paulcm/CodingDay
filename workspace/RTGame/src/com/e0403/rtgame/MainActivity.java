@@ -10,7 +10,7 @@ import android.view.WindowManager;
 public class MainActivity extends Activity {
 
 	private MainLoopThread mainThread;
-
+    private MainView myMainView;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -21,9 +21,10 @@ public class MainActivity extends Activity {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		
-     	this.mainThread = new MainLoopThread(this);
-		this.mainThread.start();
-		
+     	//this.mainThread = new MainLoopThread(this);
+		//this.mainThread.start();
+		this.myMainView = new MainView(this);
+		this.setContentView(myMainView);
 		Intent objIntent = new Intent(this, BackgroundSound.class);
 		startService(objIntent);
 	}
