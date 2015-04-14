@@ -56,7 +56,7 @@ private Date myStartTime;
 	//10 OARS at the beginning
 	 Random rand = new Random();
 	//5x klein
-	 for(int i = 0; i < 5; ++i)
+	 for(int i = 0; i < 1; ++i)
 	 {
 		 float left, right, top, bottom;
 		 left = rand.nextInt(1000);
@@ -68,7 +68,7 @@ private Date myStartTime;
 		 this.myScene.addEntity(organ);	 
 	 }
 	 //5x groß
-	 for(int i = 0; i < 5; ++i)
+	 for(int i = 0; i < 1; ++i)
 	 {
 		 float left, right, top, bottom;
 		 left = rand.nextInt(1000);

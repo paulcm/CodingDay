@@ -18,6 +18,7 @@ public class MainView extends View {
 	private int xMax;
 	private int yMin = 0;
 	private int yMax;
+	private static final int MAX_DESTROYED_OARS = 1;
 	// private RotationState rotationState;
 	private Paint textPaint;
 	private double result;
@@ -33,6 +34,7 @@ public class MainView extends View {
 	private OARManager myOARManager;
 	public static final int INTERVAL = 20;
 	public int hitcounter = 0;
+	private boolean hasWon = false;
 	
 	public Timer timer = new Timer();
 	// Constructor
@@ -196,36 +198,43 @@ public class MainView extends View {
 				if(hit2 > 0.0f)		
 				{
 					o.markHit();	
-					
-					hitcounter = hitcounter+1;
-					if (hitcounter == 5)
-					{
-						// ende aufrufen
-						
-					}
-					
-					
+					hitcounter++;					
 				}
 			}
 			
 			float hit1 = AbstractDrawableEntity.coverage(linac.getBounds(), this.enemy.getBounds());
 			if(hit1 > .0f)
 			{
-				System.out.println("TREFFER");
 				this.enemy.irradiate(linac.getBoundsPath());
 			}
 
 			//this.player.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
 			if(gameOver())
 			{
-				Intent intent = new Intent(getContext(), EndActivity.class);
-				getContext().startActivity(intent);
+				switchToEndActivity(hasWon);
 			}
 		}
 		
 		boolean gameOver()
 		{
-			return this.enemy.isDead();
+			if(this.hitcounter == MAX_DESTROYED_OARS)
+			{
+				hasWon = false;
+				return true;
+			}
+			else if(this.enemy.isDead())
+			{
+				hasWon = true;
+				return true;
+			}
+			return false;
+		}
+		
+		private void switchToEndActivity(boolean won)
+		{
+			Intent intent = new Intent(getContext(), EndActivity.class);
+			intent.putExtra("HAS_WON", won);
+			getContext().startActivity(intent);
 		}
 
 }
