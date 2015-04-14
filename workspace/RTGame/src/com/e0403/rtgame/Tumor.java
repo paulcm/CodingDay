@@ -111,6 +111,18 @@ import com.e0403.rtgame.Cell.NeighbourPosition;
 		}
 	}
 	
+	public boolean isDead()
+	{
+	 for(Cell c : cellList)
+	 {
+		 if(c.health > 0)
+		 {
+			 return false;
+		 }
+	 }
+	 return true;
+	}
+	
 	@Override
 	public void draw(Canvas canvas) {
 		
