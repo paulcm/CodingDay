@@ -1,6 +1,8 @@
 package com.e0403.rtgame;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import android.annotation.TargetApi;
@@ -26,7 +28,8 @@ import com.e0403.rtgame.Cell.NeighbourPosition;
 	private float lastYPos = 0;
 	private float heightFactor = 1;
 	
-	ArrayList<Cell> cellList;
+	List<Cell> cellList;
+	List<Cell> intermediateCells = new ArrayList<Cell>();
 	
 	
 	public Tumor(int zoomFactor, int speed){
@@ -86,6 +89,7 @@ import com.e0403.rtgame.Cell.NeighbourPosition;
 		
 	}
 	
+	
 	public void moveTumor(float xMin, float yMin, float xMax, float yMax)
 	{	
 		if(xMin != xMax && yMin != yMax){
@@ -115,7 +119,7 @@ import com.e0403.rtgame.Cell.NeighbourPosition;
 	{
 	 for(Cell c : cellList)
 	 {
-		 if(c.health > 0)
+		 if(c.isAlive())
 		 {
 			 return false;
 		 }
@@ -140,5 +144,38 @@ import com.e0403.rtgame.Cell.NeighbourPosition;
 			for(Cell c : cellList){
 				c.draw(canvas);
 			}
+	}
+	
+	public void shrink()
+	{
+		intermediateCells.clear();
+		Iterator<Cell> it = cellList.iterator();
+		Cell curCell = null;
+		while(it.hasNext())
+		{
+			curCell = it.next();
+			if(!curCell.isAlive())
+			{
+				intermediateCells.add(curCell);
+			}	
+		}
+		this.cellList.removeAll(intermediateCells);
+	}
+	
+	public void grow()
+	{
+		intermediateCells.clear();
+		Iterator<Cell> it = cellList.iterator();
+		Cell curCell = null;
+		while(it.hasNext())
+		{
+			curCell = it.next();
+			Cell newCell = curCell.divide(0.3f);
+			if(newCell != null)
+			{
+				intermediateCells.add(newCell);
+			}	
+		}
+		this.cellList.addAll(intermediateCells);
 	}
 }

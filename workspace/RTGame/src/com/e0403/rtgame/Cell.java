@@ -1,6 +1,8 @@
 package com.e0403.rtgame;
 
 
+import java.util.Random;
+
 import android.annotation.TargetApi;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,16 +12,16 @@ import android.graphics.Path.Op;
 import android.graphics.PointF;
 import android.os.Build;
 
-public class Cell extends AbstractDrawableEntity {
+public class Cell extends AbstractLivingEntitiy {
 
 	Paint paint;
 	Path path;
 	int scale;
 	boolean boundsInitialized = false;
-	
 	float triangleSide;
 	float triangleSideHalf;
 	float triangleHeight;
+	private static Random RANDOM = new Random();
 
 	PointF[] points = new PointF[6];
 	Cell[] neighbours = new Cell[6];
@@ -27,14 +29,35 @@ public class Cell extends AbstractDrawableEntity {
 	PointF cellCenter;
 	
 	// Cell dies after           x seconds of irradiation
-	int health = (int) Math.ceil(     4 * ( 1000 / MainView.INTERVAL * 10)   );	
-	enum NeighbourPosition{
+	int health = (int) Math.ceil(    0.4 * ( 1000 / MainView.INTERVAL * 10)   );		enum NeighbourPosition{
 		TOP,
 		TOP_RIGHT,
 		BOTTOM_RIGHT,
 		BOTTOM,
 		BOTTOM_LEFT,
-		TOP_LEFT
+		TOP_LEFT;
+		
+		 public static NeighbourPosition fromInteger(int x) {
+		        switch(x) 
+		        {
+		        case 0:
+		            return TOP;
+		        case 1:
+		            return TOP_RIGHT;
+		        case 2:
+		        	return BOTTOM_RIGHT;
+		        case 3:
+		        	return BOTTOM;
+		        case 4:
+		        	return BOTTOM_LEFT;
+		        case 5:
+		        	return TOP_LEFT;
+		        default:
+		        	return null;
+		        }
+		    }
+		
+		
 	}
 	
 	public Cell(int zoomFactor, PointF cellCenter){
@@ -143,10 +166,37 @@ public class Cell extends AbstractDrawableEntity {
 		if(isIrradiated){
 			--health;
 			if(health <= 0)
-				paint.setColor(Color.BLACK);
+			{
+				kill();
+			}
 		}
 		
 		return isIrradiated;
+	}
+	
+	public void notifyDeath(Cell theDeadCell)
+	{
+		for(int i = 0; i < 6; ++i)
+		{
+			if(neighbours[i] != null && neighbours[i].equals(theDeadCell))
+			{
+				neighbours[i] = null;
+			}
+		}
+	}
+	
+	@Override
+	public void kill()
+	{
+		super.kill();
+		paint.setColor(Color.BLACK);
+		for(int i = 0; i < 6; ++i)
+		{
+			if(hasNeighbour(NeighbourPosition.fromInteger(i)))
+			{
+				notifyDeath(this);
+			}
+		}
 	}
 
 	boolean hasNeighbour(NeighbourPosition pos) {
@@ -167,6 +217,25 @@ public class Cell extends AbstractDrawableEntity {
 	public void move(float dx, float dy) {
 		this.cellCenter.offset(dx,dy);
 		this.bounds.offset(dx, dy);
+	}
+	
+	public Cell divide(float prob)
+	{
+		float val = RANDOM.nextFloat();
+		if(prob >= val)
+		{
+			int posAsInt = RANDOM.nextInt(5);
+			NeighbourPosition pos = NeighbourPosition.fromInteger(posAsInt);
+			NeighbourPosition.values();
+			Cell cell = new Cell(this.scale, getNeighbourCellCenter(pos));
+			addNeighbour(cell, pos);
+			return cell;
+		}
+		else
+		{
+			return null;
+		}
+	
 	}
 }
 	

@@ -69,6 +69,7 @@ public class MainView extends View {
 		this.myInputController = inputController;
 		textPaint.setTextSize(50);
 		textPaint.setColor(Color.GREEN);
+		this.startTime = new Date();	
 	}
 
 	public void setResult(double result) {
@@ -87,13 +88,13 @@ public class MainView extends View {
 			it.next().draw(canvas);
 			//Log.i("REndering", entity.toString() + " " + entity.getClass());
 		}
-		invalidate();
 		
-		this.startTime = new Date();	
 		
 		Date currentTime = new Date();
-		if (currentTime.getTime() - startTime.getTime() >= 10000) {
+		if (currentTime.getTime() - startTime.getTime() >= 3000) {
 			//this.mainView.setResult(statsGen.generateStats());
+			this.enemy.shrink();
+			this.enemy.grow();
 			this.setResult(Double.MIN_VALUE);
 			startTime = new Date();
 			//statsGen.clearStats();
@@ -116,6 +117,7 @@ public class MainView extends View {
 		
 		
 		
+			invalidate();
 	}
 	
 	
@@ -176,8 +178,7 @@ public class MainView extends View {
 			}*/
 			
 			this.enemy.moveTumor(xMin, yMin, xMax, yMax);
-			
-			for(PowerUp p : this.myPowerUpManager.getPowerUps())
+		for(PowerUp p : this.myPowerUpManager.getPowerUps())
 			{
 				boolean hit = AbstractDrawableEntity.coverage(linac.getBoundsPath(), p.getBoundsPath());
 				if(hit)		
@@ -222,7 +223,8 @@ public class MainView extends View {
 			if(this.hitcounter == MAX_DESTROYED_OARS)
 			{
 				hasWon = false;
-				return true;
+				return false;
+				//TODO OAR as end criterium removed
 			}
 			else if(this.enemy.isDead())
 			{
