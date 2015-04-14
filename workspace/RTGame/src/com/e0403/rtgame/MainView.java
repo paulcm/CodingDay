@@ -177,9 +177,8 @@ public class MainView extends View {
 			for(PowerUp p : this.myPowerUpManager.getPowerUps())
 			{
 				boolean hit = AbstractDrawableEntity.coverage(linac.getBoundsPath(), p.getBoundsPath());
-				if(hit )		
+				if(hit)		
 				{
-					timer.cancel();
 					Intent objIntent = new Intent(this.getContext(), BeamPowerUpSound.class);
 					this.getContext().startService(objIntent);
 					p.markHit();
@@ -187,7 +186,6 @@ public class MainView extends View {
 					lin.setBeamWidth(40);
 					
 					// start in 5 sec
-					Timer timer = new Timer();
 					timer.schedule(new Task(lin), 5000);
 				}
 			}

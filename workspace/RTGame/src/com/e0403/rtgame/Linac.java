@@ -45,6 +45,7 @@ public class Linac extends AbstractDrawableEntity{
 	public Linac(float theStartPosX, float theStartPosY) {
 		super();
 		this.initialize(theStartPosX, theStartPosY);
+		receiveTouchNotification(0,0);
 	}
 
 	
