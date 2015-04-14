@@ -176,8 +176,8 @@ public class MainView extends View {
 			
 			for(PowerUp p : this.myPowerUpManager.getPowerUps())
 			{
-				float hit = AbstractDrawableEntity.coverage(linac.getBounds(), p.getBounds());
-				if(hit > 0.0f)		
+				boolean hit = AbstractDrawableEntity.coverage(linac.getBoundsPath(), p.getBoundsPath());
+				if(hit )		
 				{
 					timer.cancel();
 					Intent objIntent = new Intent(this.getContext(), BeamPowerUpSound.class);
@@ -191,23 +191,25 @@ public class MainView extends View {
 					timer.schedule(new Task(lin), 5000);
 				}
 			}
+
 			
 			for(Oar o : this.myOARManager.getOar())
 			{
-				float hit2 = AbstractDrawableEntity.coverage(linac.getBounds(), o.getBounds());
-				if(hit2 > 0.0f)		
+				boolean hit2 = AbstractDrawableEntity.coverage(linac.getBoundsPath(), o.getBoundsPath());
+				if(hit2)		
 				{
 					o.markHit();	
 					hitcounter++;					
 				}
 			}
 			
-			float hit1 = AbstractDrawableEntity.coverage(linac.getBounds(), this.enemy.getBounds());
-			if(hit1 > .0f)
+			boolean hit1 = AbstractDrawableEntity.coverage(linac.getBoundsPath(), this.enemy.getBoundsPath());
+			if(hit1)
 			{
 				this.enemy.irradiate(linac.getBoundsPath());
 			}
 
+			boolean hit = this.enemy.irradiate(linac.getBoundsPath());
 			//this.player.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
 			if(gameOver())
 			{
