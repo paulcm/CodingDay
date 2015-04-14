@@ -53,15 +53,11 @@ public class PowerUp extends AbstractDrawableEntity{
 		this.paint.setColor(Color.RED);
 		myHitTime = new Date();
 		iHaveBeenHit = true;
-		this.setInvisible();
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
-		if(isVisible())
-		{
 			canvas.drawRect(this.getBounds(), this.getPaint());			
-		}
 	}
 	
 	

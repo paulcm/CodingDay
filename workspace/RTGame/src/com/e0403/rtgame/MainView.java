@@ -3,13 +3,12 @@ package com.e0403.rtgame;
 import java.util.Date;
 import java.util.Iterator;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -170,9 +169,9 @@ public class MainView extends View {
 				float hit = AbstractDrawableEntity.coverage(linac.getBounds(), p.getBounds());
 				if(hit > 0.0f)		
 				{
-					//Intent objIntent = new Intent(context, BeamPowerUpSound.class);
-					//context.startService(objIntent);
-					//p.markHit();
+					Intent objIntent = new Intent(this.getContext(), BeamPowerUpSound.class);
+					this.getContext().startService(objIntent);
+					p.markHit();
 					//Linac lin = (Linac) linac;
 					//lin.setBeamWidth(40);
 				}
@@ -181,6 +180,7 @@ public class MainView extends View {
 			if(hit1 > .0f)
 			{
 				System.out.println("TREFFER");
+				this.enemy.irradiate(linac.getBoundsPath());
 			}
 
 			//this.player.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
