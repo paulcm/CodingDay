@@ -57,7 +57,7 @@ public class PowerUp extends AbstractDrawableEntity{
 
 	@Override
 	public void draw(Canvas canvas) {
-			canvas.drawRect(this.getBounds(), this.getPaint());			
+			canvas.drawPath(this.getBoundsPath(), this.getPaint());			
 	}
 	
 	

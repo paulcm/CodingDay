@@ -4,11 +4,13 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Timer;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path.Op;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,7 +29,7 @@ public class MainView extends View {
 	private Date startTime;
 	private Tumor enemy;
 	//private MainView mainView;
-	private DrawableEntity linac;
+	private Linac linac;
 	private Scene scene;
 	private RotationState rotationState;
 	private PowerUpManager myPowerUpManager;
@@ -156,6 +158,7 @@ public class MainView extends View {
 	}
 	
 	// Detect collision and update the position.
+		@SuppressLint("NewApi")
 		private void update(float xMin, float yMin, float xMax, float yMax) {
 			Float y = rotationState.getRotationY();
 			Float z = rotationState.getRotationZ();
@@ -182,18 +185,17 @@ public class MainView extends View {
 					Intent objIntent = new Intent(this.getContext(), BeamPowerUpSound.class);
 					this.getContext().startService(objIntent);
 					p.markHit();
-					Linac lin = (Linac) linac;
-					lin.setBeamWidth(40);
+					linac.setBeamWidth(40);
 					
 					// start in 5 sec
-					timer.schedule(new Task(lin), 5000);
+					timer.schedule(new Task(linac), 5000);
 				}
 			}
 
 			
 			for(Oar o : this.myOARManager.getOar())
 			{
-				boolean hit2 = AbstractDrawableEntity.coverage(linac.getBoundsPath(), o.getBoundsPath());
+				boolean hit2 = linac.getBoundsPath().op(o.getBoundsPath(), Op.INTERSECT);
 				if(hit2)		
 				{
 					o.markHit();	

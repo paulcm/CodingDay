@@ -61,6 +61,13 @@ public class Linac extends AbstractDrawableEntity{
 		
 		calcEndPoint();
 		
+		
+
+	}
+	
+	@Override
+	public Path getBoundsPath() 
+	{
 		float x0Pos = myBeamExitXPos;
 		float y0Pos = myBeamExitYPos;
 		
@@ -84,12 +91,7 @@ public class Linac extends AbstractDrawableEntity{
 		myBoundsPath.lineTo(x1Pos-w2*ortho_x, y1Pos-w2*ortho_y);
 		myBoundsPath.lineTo(x0Pos-w2*ortho_x, y0Pos-w2*ortho_y);
 		myBoundsPath.lineTo(x0Pos+w2*ortho_x, y0Pos+w2*ortho_y);
-
-	}
-	
-	@Override
-	public Path getBoundsPath() 
-	{
+		
 		return myBoundsPath;
 	}
 	
@@ -131,14 +133,14 @@ public class Linac extends AbstractDrawableEntity{
 		myBeamPaint.setStrokeWidth(myBeamWidth);
 		
 
-		canvas.drawLine(myBeamExitXPos, myBeamExitYPos, myEndPointXPos, myEndPointYPos, myBeamPaint);
+		//canvas.drawLine(myBeamExitXPos, myBeamExitYPos, myEndPointXPos, myEndPointYPos, myBeamPaint);
         canvas.drawCircle(myStartPointXPos + myLinacWidth, myStartPointYPos, 25, myCirclePaint);
         canvas.drawRect(myStartPointXPos, myStartPointYPos - myLinacHeight/2.0f, myStartPointXPos + myLinacWidth, myStartPointYPos + myLinacHeight/2.0f, this.getPaint());
         
-//		Paint aDebugPaint = new Paint();
-//		aDebugPaint.setColor(Color.rgb(255,255,255));
-//		aDebugPaint.setStrokeWidth(1);
-//        canvas.drawPath(this.getBoundsPath(), aDebugPaint);
+		Paint aDebugPaint = new Paint();
+		aDebugPaint.setColor(Color.rgb(255,255,255));
+		aDebugPaint.setStrokeWidth(1);
+        canvas.drawPath(this.getBoundsPath(), aDebugPaint);
         
         Paint aDebugEPPaint = new Paint();
         aDebugEPPaint.setColor(Color.rgb(0,255,0));

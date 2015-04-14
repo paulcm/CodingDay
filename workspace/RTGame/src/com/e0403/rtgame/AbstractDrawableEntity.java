@@ -42,6 +42,7 @@ public abstract class AbstractDrawableEntity implements DrawableEntity{
 	public void move(float dx, float dy) {
 		this.bounds.set(this.bounds.left + dx, this.bounds.top + dy, this.bounds.right + dx, this.bounds.bottom + dy);
 	}
+	
 	@Override
 	public RectF getBounds() {
 		return this.bounds;
@@ -51,11 +52,11 @@ public abstract class AbstractDrawableEntity implements DrawableEntity{
 	public Path getBoundsPath() {
 		Path aPath = new Path();
 		aPath.reset();
-		aPath.moveTo(this.bounds.left, this.bounds.top);	
-		aPath.lineTo(this.bounds.right, this.bounds.top);	
-		aPath.lineTo(this.bounds.right, this.bounds.bottom);
-		aPath.lineTo(this.bounds.left, this.bounds.bottom);
+		aPath.moveTo(this.bounds.left, this.bounds.bottom);	
+		aPath.lineTo(this.bounds.right, this.bounds.bottom);	
+		aPath.lineTo(this.bounds.right, this.bounds.top);
 		aPath.lineTo(this.bounds.left, this.bounds.top);
+		aPath.lineTo(this.bounds.left, this.bounds.bottom);
 		return aPath;
 	}
 	
