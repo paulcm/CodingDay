@@ -31,11 +31,7 @@ private Date myStartTime;
 
  private void removePowerUps()
  {
-	 for(PowerUp p : this.myPowerUps)
-	 {
-		 this.myScene.removeEntity(p);
-	 }
-	 this.myPowerUps.clear();
+   this.myPowerUps.clear();
  }
  
  public void update()
@@ -47,7 +43,7 @@ private Date myStartTime;
 		 PowerUp p = it.next();
 		 if(p.hasBeenHit())
 		 {
-			this.myScene.removeEntity(p);
+			//this.myScene.removeEntity(p);
 			it.remove();
 		 }
 	 }

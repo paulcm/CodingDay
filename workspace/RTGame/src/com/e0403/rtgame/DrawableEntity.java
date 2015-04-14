@@ -26,6 +26,9 @@ public interface DrawableEntity {
 	public boolean[] collideAndCorrect(float dx, float dy, float xMin, float yMin,
 			float xMax, float yMax);
 	
+	public boolean isVisible();
+	public void setVisible();
+	public void setInvisible();
 	//public boolean isNear(float x0, float y0, float nearCriteria);
 	
 	

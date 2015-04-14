@@ -7,11 +7,26 @@ import android.graphics.Path;
 public abstract class AbstractDrawableEntity implements DrawableEntity{
 	protected RectF bounds;
 	protected Paint paint;
+	protected boolean isVisible;
 	
 
 	public AbstractDrawableEntity(){
 		this.bounds = new RectF();
 		this.paint = new Paint();
+		isVisible = true;
+	}
+	
+	public boolean isVisible()
+	{
+	  return isVisible;	
+	}
+	public void setVisible()
+	{
+		isVisible = true;
+	}
+	public void setInvisible()
+	{
+		isVisible = false;
 	}
 	
 	public static float coverage(RectF beam, RectF target)
