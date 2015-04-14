@@ -2,6 +2,7 @@ package com.e0403.rtgame;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.RectF;
 
 public interface DrawableEntity {
@@ -13,6 +14,8 @@ public interface DrawableEntity {
 	 * @return the bounding box
 	 */
 	public RectF getBounds();
+	
+	public Path getBoundsPath();
 	
 	public Paint getPaint();
 	

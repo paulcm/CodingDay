@@ -2,6 +2,7 @@ package com.e0403.rtgame;
 
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Path;
 
 public abstract class AbstractDrawableEntity implements DrawableEntity{
 	protected RectF bounds;
@@ -39,6 +40,18 @@ public abstract class AbstractDrawableEntity implements DrawableEntity{
 	@Override
 	public RectF getBounds() {
 		return this.bounds;
+	}
+	
+	@Override
+	public Path getBoundsPath() {
+		Path aPath = new Path();
+		aPath.reset();
+		aPath.moveTo(this.bounds.left, this.bounds.top);	
+		aPath.lineTo(this.bounds.right, this.bounds.top);	
+		aPath.lineTo(this.bounds.right, this.bounds.bottom);
+		aPath.lineTo(this.bounds.left, this.bounds.bottom);
+		aPath.lineTo(this.bounds.left, this.bounds.top);
+		return aPath;
 	}
 	
 	@Override

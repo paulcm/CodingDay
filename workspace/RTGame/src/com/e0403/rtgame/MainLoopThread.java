@@ -118,6 +118,7 @@ public class MainLoopThread extends Thread {
 		if(hit1 > .0f)
 		{
 			System.out.println("TREFFER");
+			this.enemy.irradiate(linac.getBoundsPath());
 		}
 
 		//this.player.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
