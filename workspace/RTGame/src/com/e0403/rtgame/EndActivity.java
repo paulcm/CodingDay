@@ -12,7 +12,16 @@ public class EndActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_end);
-
+        Bundle b = getIntent().getExtras();
+        Boolean won = b.getBoolean("HAS_WON");
+        if(won.booleanValue())
+        {
+        	setTitle("GEWONNEN!  :)");
+        }
+        else 
+        {
+        	setTitle("VERLOREN!  :(");
+        }
 	}
 
 	@Override
