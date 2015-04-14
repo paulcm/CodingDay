@@ -184,13 +184,8 @@ public class MainView extends View {
 					timer.schedule(new Task(lin), 5000);
 				}
 			}
-			float hit1 = AbstractDrawableEntity.coverage(linac.getBounds(), this.enemy.getBounds());
-			if(hit1 > .0f)
-			{
-				System.out.println("TREFFER");
-				this.enemy.irradiate(linac.getBoundsPath());
-			}
 
+			boolean hit = this.enemy.irradiate(linac.getBoundsPath());
 			//this.player.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
 		}
 

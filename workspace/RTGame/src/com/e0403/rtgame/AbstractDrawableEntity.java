@@ -8,7 +8,7 @@ public abstract class AbstractDrawableEntity implements DrawableEntity{
 	protected RectF bounds;
 	protected Paint paint;
 	protected boolean isVisible;
-	
+
 
 	public AbstractDrawableEntity(){
 		this.bounds = new RectF();
@@ -29,7 +29,7 @@ public abstract class AbstractDrawableEntity implements DrawableEntity{
 		isVisible = false;
 	}
 	
-	public static float coverage(RectF beam, RectF target)
+	public static float coverage(RectF beam, RectF target) //TODO: Use Path
 	{
 		RectF result = new RectF();
 		if(result.setIntersect(beam, target))
