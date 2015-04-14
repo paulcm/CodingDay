@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
+import java.util.Timer;
 
 public class MainView extends View {
 	private int xMin = 0; // This view's bounds
@@ -30,6 +31,8 @@ public class MainView extends View {
 	private RotationState rotationState;
 	private PowerUpManager myPowerUpManager;
 	public static final int INTERVAL = 20;
+	
+	public Timer timer = new Timer();
 	// Constructor
 	public MainView(Context context) {
 		super(context);
@@ -169,11 +172,16 @@ public class MainView extends View {
 				float hit = AbstractDrawableEntity.coverage(linac.getBounds(), p.getBounds());
 				if(hit > 0.0f)		
 				{
+					timer.cancel();
 					Intent objIntent = new Intent(this.getContext(), BeamPowerUpSound.class);
 					this.getContext().startService(objIntent);
 					p.markHit();
-					//Linac lin = (Linac) linac;
-					//lin.setBeamWidth(40);
+					Linac lin = (Linac) linac;
+					lin.setBeamWidth(40);
+					
+					// start in 5 sec
+					Timer timer = new Timer();
+					timer.schedule(new Task(lin), 5000);
 				}
 			}
 			float hit1 = AbstractDrawableEntity.coverage(linac.getBounds(), this.enemy.getBounds());
