@@ -112,6 +112,8 @@ public class MainLoopThread extends Thread {
 				Intent objIntent = new Intent(context, BeamPowerUpSound.class);
 				context.startService(objIntent);
 				p.markHit();
+				Linac lin = (Linac) linac;
+				lin.setBeamWidth(40);
 			}
 		}
 		float hit1 = AbstractDrawableEntity.coverage(linac.getBounds(), this.enemy.getBounds());

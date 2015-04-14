@@ -2,6 +2,7 @@ package com.e0403.rtgame;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -40,14 +41,14 @@ private Date myStartTime;
  public void update()
  {
 	 Date currentTime = new Date();
-	 for(PowerUp p : this.myPowerUps)
+	 Iterator<PowerUp> it = this.myPowerUps.iterator();
+	 while(it.hasNext())
 	 {
+		 PowerUp p = it.next();
 		 if(p.hasBeenHit())
 		 {
-			 if (currentTime.getTime() - myStartTime.getTime() >= 2000)
-			 {
-				 this.removePowerUp(p);
-			 }
+			this.myScene.removeEntity(p);
+			it.remove();
 		 }
 	 }
 		if (currentTime.getTime() - myStartTime.getTime() >= 10000)
@@ -63,7 +64,7 @@ private Date myStartTime;
  private void spawnPowerUp()
  {
 	 Random rand = new Random();
-	 int powerUpCount = rand.nextInt(1) + 1;
+	 int powerUpCount = rand.nextInt(5) + 1;
 	 for(int i = 0; i < powerUpCount; ++i)
 	 {
 		 float left, right, top, bottom;
