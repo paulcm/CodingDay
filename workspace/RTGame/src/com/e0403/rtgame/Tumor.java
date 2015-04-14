@@ -106,7 +106,7 @@ import com.e0403.rtgame.Cell.NeighbourPosition;
 			}
 			lastYPos = (float)absYPos;
 			// set amount of sine curves (param speed) is processed in 10 seconds
-			moveIterator += 2 * Math.PI / (1000 / MainLoopThread.INTERVAL * 10);
+			moveIterator += 2 * Math.PI / (1000 / MainView.INTERVAL * 10);
 			moveIterator = moveIterator % (2 * Math.PI);
 		}
 	}

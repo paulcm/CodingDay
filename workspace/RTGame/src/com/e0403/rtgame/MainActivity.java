@@ -9,7 +9,6 @@ import android.view.WindowManager;
 
 public class MainActivity extends Activity {
 
-	private MainLoopThread mainThread;
     private MainView myMainView;
 
 	/** Called when the activity is first created. */
