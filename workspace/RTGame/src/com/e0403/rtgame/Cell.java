@@ -27,7 +27,7 @@ public class Cell extends AbstractDrawableEntity {
 	PointF cellCenter;
 	
 	// Cell dies after           x seconds of irradiation
-	int health = (int) Math.ceil(     0.1 * ( 1000 / MainView.INTERVAL * 10)   );	
+	int health = (int) Math.ceil(     10 * ( 1000 / MainView.INTERVAL * 10)   );	
 	enum NeighbourPosition{
 		TOP,
 		TOP_RIGHT,

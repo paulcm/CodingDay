@@ -1,8 +1,10 @@
 package com.e0403.rtgame;
 
+import android.annotation.SuppressLint;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Path;
+import android.graphics.Path.Op;
 
 public abstract class AbstractDrawableEntity implements DrawableEntity{
 	protected RectF bounds;
@@ -29,24 +31,12 @@ public abstract class AbstractDrawableEntity implements DrawableEntity{
 		isVisible = false;
 	}
 	
-	public static float coverage(RectF beam, RectF target) //TODO: Use Path
+	@SuppressLint("NewApi")
+	public static boolean coverage(Path beam, Path target)
 	{
-		RectF result = new RectF();
-		if(result.setIntersect(beam, target))
-			{
-			 return computeCoverage(result, target);
-			}
-		else
-		{
-			return .0f;
-		}
+		return beam.op(target, Op.INTERSECT);
 	}
 
-	private static float computeCoverage(RectF result, RectF target)
-	{
-		return (result.width() * result.height()) / ((target.width() * target.height())) * 100.0f;
-
-	}
 	
 	@Override
 	public void move(float dx, float dy) {
