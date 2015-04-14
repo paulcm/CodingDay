@@ -45,7 +45,7 @@ public class MainLoopThread extends Thread {
 		//this.statsGen = new StatsGenerator<Float>();
 		// the view the scene is drawn onto
 		myPowerUpManager = new PowerUpManager(scene);
-		this.mainView = new MainView(context, scene, inputController);
+		this.mainView = new MainView(context);
 		// connect activity and view
 		((Activity)context).setContentView(mainView);
 		mainView.setBackgroundColor(Color.BLACK);
@@ -73,6 +73,7 @@ public class MainLoopThread extends Thread {
 		//		enemy.getBounds()));
 		// Update the position, including collision detection and reaction.
 		myPowerUpManager.update();
+		this.scene.updateScene();
 		update(this.mainView.getxMin(),
 				this.mainView.getyMin(),
 				this.mainView.getxMax(),
@@ -109,17 +110,18 @@ public class MainLoopThread extends Thread {
 			float hit = AbstractDrawableEntity.coverage(linac.getBounds(), p.getBounds());
 			if(hit > 0.0f)		
 			{
-				Intent objIntent = new Intent(context, BeamPowerUpSound.class);
-				context.startService(objIntent);
-				p.markHit();
-				Linac lin = (Linac) linac;
-				lin.setBeamWidth(40);
+				//Intent objIntent = new Intent(context, BeamPowerUpSound.class);
+				//context.startService(objIntent);
+				//p.markHit();
+				//Linac lin = (Linac) linac;
+				//lin.setBeamWidth(40);
 			}
 		}
 		float hit1 = AbstractDrawableEntity.coverage(linac.getBounds(), this.enemy.getBounds());
 		if(hit1 > .0f)
 		{
 			System.out.println("TREFFER");
+			this.enemy.irradiate(linac.getBoundsPath());
 		}
 
 		//this.player.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);

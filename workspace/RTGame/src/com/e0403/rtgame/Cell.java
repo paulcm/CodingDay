@@ -26,8 +26,8 @@ public class Cell extends AbstractDrawableEntity {
 	
 	PointF cellCenter;
 	
-	// Cell dies after 10 seconds of irradiation
-	int health = 1000 / MainLoopThread.INTERVAL * 10;
+	// Cell dies after           x seconds of irradiation
+	int health = (int) Math.ceil(     0.1 * ( 1000 / MainLoopThread.INTERVAL * 10)   );
 	
 	enum NeighbourPosition{
 		TOP,
@@ -136,8 +136,10 @@ public class Cell extends AbstractDrawableEntity {
 	}
 	
 	@TargetApi(Build.VERSION_CODES.KITKAT) 
-	public boolean irradiate(Path beam){
-		boolean isIrradiated = path.op(beam, Op.INTERSECT);
+	public boolean irradiate(android.graphics.Path beam){
+		Path.Op op = Op.INTERSECT;
+		
+		boolean isIrradiated = path.op(beam, path , op); //path.op(beam, android.graphics.Path.Op.INTERSECT);
 		
 		if(isIrradiated){
 			--health;

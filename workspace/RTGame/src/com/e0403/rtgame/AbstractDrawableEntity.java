@@ -2,15 +2,31 @@ package com.e0403.rtgame;
 
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Path;
 
 public abstract class AbstractDrawableEntity implements DrawableEntity{
 	protected RectF bounds;
 	protected Paint paint;
+	protected boolean isVisible;
 	
 
 	public AbstractDrawableEntity(){
 		this.bounds = new RectF();
 		this.paint = new Paint();
+		isVisible = true;
+	}
+	
+	public boolean isVisible()
+	{
+	  return isVisible;	
+	}
+	public void setVisible()
+	{
+		isVisible = true;
+	}
+	public void setInvisible()
+	{
+		isVisible = false;
 	}
 	
 	public static float coverage(RectF beam, RectF target)
@@ -39,6 +55,18 @@ public abstract class AbstractDrawableEntity implements DrawableEntity{
 	@Override
 	public RectF getBounds() {
 		return this.bounds;
+	}
+	
+	@Override
+	public Path getBoundsPath() {
+		Path aPath = new Path();
+		aPath.reset();
+		aPath.moveTo(this.bounds.left, this.bounds.top);	
+		aPath.lineTo(this.bounds.right, this.bounds.top);	
+		aPath.lineTo(this.bounds.right, this.bounds.bottom);
+		aPath.lineTo(this.bounds.left, this.bounds.bottom);
+		aPath.lineTo(this.bounds.left, this.bounds.top);
+		return aPath;
 	}
 	
 	@Override
