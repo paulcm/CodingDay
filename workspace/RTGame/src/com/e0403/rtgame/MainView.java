@@ -2,6 +2,7 @@ package com.e0403.rtgame;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Timer;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +12,6 @@ import android.graphics.Paint;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
-import java.util.Timer;
 
 public class MainView extends View {
 	private int xMin = 0; // This view's bounds
@@ -216,6 +216,16 @@ public class MainView extends View {
 			}
 
 			//this.player.collideAndCorrect(-y, -z, xMin, yMin, xMax, yMax);
+			if(gameOver())
+			{
+				Intent intent = new Intent(getContext(), EndActivity.class);
+				getContext().startActivity(intent);
+			}
+		}
+		
+		boolean gameOver()
+		{
+			return this.enemy.isDead();
 		}
 
 }
