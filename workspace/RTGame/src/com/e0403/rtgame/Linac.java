@@ -17,9 +17,14 @@ public class Linac extends AbstractDrawableEntity{
 	private Paint myCirclePaint;
     private float myBeamWidth;
 	
+    public float getBeamWidth()
+    {
+    	return myBeamWidth;
+    }
+    
 	public void setBeamWidth(float width)
 	{
-		this.myBeamWidth = width;
+	  this.myBeamWidth = width;
 	}
 	/**
 	 * @param theStartPosX
